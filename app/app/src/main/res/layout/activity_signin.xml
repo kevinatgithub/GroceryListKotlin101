@@ -97,7 +97,6 @@
         app:layout_constraintStart_toStartOf="@id/glStart"
         android:gravity="start||top" />
 
-
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etPassword"
         android:layout_width="0dp"
@@ -172,6 +171,5 @@
         app:layout_constraintEnd_toEndOf="@id/glEnd"
         app:layout_constraintStart_toEndOf="@+id/tvSignUpPrompt"
         app:layout_constraintTop_toTopOf="@+id/tvSignUpPrompt" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
