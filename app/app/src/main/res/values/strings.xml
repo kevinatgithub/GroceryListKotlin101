@@ -5,6 +5,8 @@
     <string name="email">EMAIL</string>
     <string name="password">Enter your password</string>
     <string name="sign_in">SIGN IN</string>
-    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="no_account">Don\'t have an account?</string>
     <string name="sign_up">SIGN UP</string>
+    <string name="helper_text">Helper text</string>
+    <string name="password_characters">At least 8 characters</string>
 </resources>
