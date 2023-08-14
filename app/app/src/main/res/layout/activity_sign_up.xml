@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignInActivity">
+    tools:context=".SignUpActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/glStart"
@@ -97,6 +97,35 @@
         app:layout_constraintStart_toStartOf="@id/glStart" />
 
     <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/name"
+        android:background="@drawable/edittext_background"
+        android:layout_marginTop="36dp"
+        android:inputType="textEmailAddress"
+        android:selectAllOnFocus="true"
+        android:minHeight="50dp"
+        android:padding="10dp"
+        android:textSize="15sp"
+        android:textColor="@color/grey_500"
+        app:layout_constraintStart_toStartOf="@id/glStart"
+        app:layout_constraintEnd_toEndOf="@id/glEnd"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail"
+        android:gravity="start|top"/>
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/helper_text"
+        android:textSize="14sp"
+        android:textColor="@color/grey_500"
+        android:paddingStart="10dp"
+        app:layout_constraintTop_toBottomOf="@id/etName"
+        app:layout_constraintStart_toStartOf="@id/glStart" />
+
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -112,7 +141,7 @@
         app:layout_constraintEnd_toEndOf="@id/glEnd"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@id/glStart"
-        app:layout_constraintTop_toBottomOf="@+id/etEmail"
+        app:layout_constraintTop_toBottomOf="@+id/etName"
         android:gravity="start|top"/>
 
     <TextView
@@ -127,13 +156,13 @@
         app:layout_constraintStart_toStartOf="@id/glStart" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnSignIn"
+        android:id="@+id/btnSignUp"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/signin_button_border"
         android:gravity="center"
-        android:text="@string/sign_in"
+        android:text="@string/sign_up"
         android:textColor="@color/black"
         android:textSize="19sp"
         app:layout_constraintEnd_toEndOf="@id/glEnd"
@@ -146,26 +175,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="@string/no_account"
+        android:text="@string/already_have_an_account"
         android:textSize="16sp"
         android:textColor="@color/black"
         android:paddingStart="20dp"
         android:paddingEnd="45dp"
         app:layout_constraintStart_toStartOf="@id/glStart"
-        app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSignUp" />
 
     <TextView
-        android:id="@+id/tvSignUp"
+        android:id="@+id/tvSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:minHeight="48dp"
-        android:text="@string/sign_up"
+        android:text="@string/sign_in"
         android:textColor="@color/blue"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/glEnd"
         app:layout_constraintStart_toEndOf="@+id/tvSignUpPrompt"
         app:layout_constraintTop_toTopOf="@+id/tvSignUpPrompt" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvScanQr"
+        android:text="@string/scan_qr_code"
+        android:minHeight="48dp"
+        app:layout_constraintTop_toBottomOf="@id/tvSignIn"
+        app:layout_constraintStart_toStartOf="@id/glStart"
+        app:layout_constraintEnd_toEndOf="@id/glEnd"
+        android:layout_marginTop="50dp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:textColor="@color/blue"
+        android:textSize="18sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

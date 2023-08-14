@@ -9,4 +9,7 @@
     <string name="sign_up">SIGN UP</string>
     <string name="helper_text">Helper text</string>
     <string name="password_characters">At least 8 characters</string>
+    <string name="name">NAME</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="scan_qr_code">SCAN QR CODE</string>
 </resources>
