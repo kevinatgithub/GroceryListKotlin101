@@ -12,4 +12,6 @@
     <string name="name">NAME</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="scan_qr_code">SCAN QR CODE</string>
+    <string name="contact_sign_up">You are signing up as a contact of</string>
+    <string name="update_name">Update Name</string>
 </resources>
