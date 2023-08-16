@@ -9,5 +9,5 @@ public class Item
     public Decimal? Price { get; set; }
     public int? AlternativeItemId { get; set; }
     public bool IsPrimary { get; set; }
-    public short Status { get; set; }
+    public int Status { get; set; }
 }
