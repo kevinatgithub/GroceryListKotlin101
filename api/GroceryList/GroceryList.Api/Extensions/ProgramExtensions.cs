@@ -1,4 +1,7 @@
 ﻿using GroceryList.Repositories;
+using GroceryList.Repositories.Interfaces;
+using GroceryList.Services;
+using GroceryList.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -73,6 +76,17 @@ public static class ProgramExtensions
                 }
             });
         });
+        return services;
+    }
+
+    public static IServiceCollection AddServicesAndRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<IItemRepository, ItemRepository>();
+        services.AddScoped<IUserCartRepository, UserCartRepository>();
+        services.AddScoped<ICartService, CartService>();
+        services.AddScoped<IUserCartService, CartService>();
+        services.AddScoped<IItemService, ItemService>();
         return services;
     }
 }

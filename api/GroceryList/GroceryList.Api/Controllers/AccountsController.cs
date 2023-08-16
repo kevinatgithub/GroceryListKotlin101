@@ -1,4 +1,5 @@
 ﻿using GroceryList.Api.Models;
+using GroceryList.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
@@ -15,11 +16,13 @@ namespace GroceryList.Api.Controllers;
 public class AccountsController : ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly ICartService _cartService;
     private readonly JwtOptions _jwtOptions;
 
-    public AccountsController(UserManager<IdentityUser> userManager, IOptions<JwtOptions> jwtOptions)
+    public AccountsController(UserManager<IdentityUser> userManager, IOptions<JwtOptions> jwtOptions, ICartService cartService)
     {
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        _cartService = cartService ?? throw new ArgumentNullException(nameof(cartService));
         _jwtOptions = jwtOptions.Value ?? throw new ArgumentNullException(nameof(jwtOptions));
     }
 
@@ -39,6 +42,7 @@ public class AccountsController : ControllerBase
 
             if ((await _userManager.ConfirmEmailAsync(user, code)).Succeeded)
             {
+                await _cartService.CreateNewCartForUserAsync(user.Email);
                 return Ok("SUCCESS");
             }
             else
