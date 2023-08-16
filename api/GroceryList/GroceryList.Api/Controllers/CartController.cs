@@ -1,4 +1,7 @@
-﻿using GroceryList.Services.Interfaces;
+﻿using GroceryList.Api.Extensions;
+using GroceryList.Domain;
+using GroceryList.Services;
+using GroceryList.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,66 +17,57 @@ public class CartController : ControllerBase
     private readonly UserManager<IdentityUser> userManager;
     private readonly ICartService _cartService;
     private readonly IItemService _itemService;
+    private readonly IUserService _userService;
 
-    public CartController(UserManager<IdentityUser> userManager, ICartService cartService, IItemService itemService)
+    public CartController(
+        UserManager<IdentityUser> userManager,
+        ICartService cartService,
+        IItemService itemService,
+        IUserService userService)
     {
         this.userManager = userManager;
         _cartService = cartService ?? throw new ArgumentNullException(nameof(cartService));
         _itemService = itemService ?? throw new ArgumentNullException(nameof(itemService));
+        _userService = userService;
     }
 
-    [HttpGet("{cartId}")]
-    public async Task<IActionResult> Items(int cartId)
+    [HttpGet("items")]
+    public async Task<IActionResult> Items()
     {
-        var items = await _itemService.GetItemsFromCartAsync(cartId);
+        var user = User.Claims.Current();
+        var items = await _itemService.GetItemsFromCartAsync(user.CartId);
         return Ok(items);
     }
 
-    [HttpGet("{cartId}/users")]
-    public async Task<IActionResult> GetCartUsers(int cartId)
+    [HttpPost("sync")]
+    public async Task<IActionResult> SyncList(ICollection<Item> items)
     {
-        var users = await _cartService.GetCartUsers(cartId);
+        var user = User.Claims.Current();
+        await _itemService.SyncCartItemsAsync(user.CartId, items);
+        return Ok();
+    }
+
+    [HttpGet("users")]
+    public async Task<IActionResult> GetCartUsers()
+    {
+        var user = User.Claims.Current();
+        var users = await _cartService.GetCartUsersAync(user.CartId);
         return Ok(users);
     }
 
-    [HttpPost("{cartId}/users")]
-    public async Task<IActionResult> AddUserToCart(int cartId, string email, string name, string password)
+    [HttpDelete("users")]
+    public async Task<IActionResult> RemoveUserFromCart(string email)
     {
-        var user = new IdentityUser
-        {
-            Email = email,
-            UserName = email,
-            NormalizedUserName = name
-        };
-        var result = await userManager.CreateAsync(user, password);
-        if (result.Succeeded)
-        {
-            var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-
-            if ((await userManager.ConfirmEmailAsync(user, code)).Succeeded)
-            {
-                await _cartService.AddUserToCartAsync(cartId, email, user.Email);
-                return Ok("SUCCESS");
-            }
-            else
-            {
-                return BadRequest("FAILED");
-            }
-        }
-        else
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(error.Code, error.Description);
-            }
-            return BadRequest(ModelState);
-        }
+        var user = User.Claims.Current();
+        await _cartService.RemoveUserOfCartAsync(user.CartId, email);
+        return Ok();
     }
 
-    [HttpDelete("{cartId}/users")]
-    public async Task<IActionResult> RemoveUserFromCart(int cartId, string email)
+    [HttpDelete]
+    public async Task<IActionResult> ClearCart()
     {
-        await _cartService.RemoveUserOfCartAsync(cartId, email);
+        var user = User.Claims.Current();
+        await _itemService.ClearItemsInCart(user.CartId);
         return Ok();
     }
 }

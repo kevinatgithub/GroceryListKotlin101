@@ -22,7 +22,12 @@ public class ItemRepository : IItemRepository
 
     public async Task<ICollection<Item>> GetAllItemsFromCartAsync(int cartId)
     {
-        return await _context.Items.Where(i => i.CartId == cartId).ToListAsync();
+        return await _context.Items.Where(i => i.CartId == cartId && i.IsPrimary == true).ToListAsync();
+    }
+
+    public async Task<ICollection<Item>> GetAlternativeItems(int id)
+    {
+        return await _context.Items.Where(i => i.AlternativeItemId == id).ToListAsync();
     }
 
     public async Task<Item?> GetByIdAsync(int id)
@@ -39,6 +44,20 @@ public class ItemRepository : IItemRepository
             _context.SaveChanges();
         }
         return item;
+    }
+
+    public void RemoveItemsByAltId(int id)
+    {
+        var items = _context.Items.Where(i => i.AlternativeItemId == id);
+        _context.Items.RemoveRange(items);
+        _context.SaveChanges();
+    }
+
+    public async Task RemoveItemsInCart(int cartId)
+    {
+        var items = await _context.Items.Where(i => i.CartId == cartId).ToListAsync();
+        _context.Items.RemoveRange(items);
+        _context.SaveChanges();
     }
 
     public Item? UpdateItem(Item item)

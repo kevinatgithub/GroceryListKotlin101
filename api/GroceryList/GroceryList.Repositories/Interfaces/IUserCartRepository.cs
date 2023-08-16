@@ -8,4 +8,5 @@ public interface IUserCartRepository
     public Task RemoveUserCartAsync(int userCartId);
     public Task<UserCart?> GetUserCartByIdAndEmailAsync(int cartId, string email);
     public Task<ICollection<UserCart>> GetAllUsersFromCartAsync(int cartId);
+    public Task<UserCart> GetUserCartByEmailAsync(string email);
 }

@@ -13,6 +13,22 @@ public class ItemService : IItemService
         _repository = repository;
     }
 
+    public async Task ClearItemsInCart(int cartId)
+    {
+        await _repository.RemoveItemsInCart(cartId);
+    }
+
+    public async Task<Item> CreateItemAsync(Item item)
+    {
+        await _repository.CreateItemAsync(item);
+        return item;
+    }
+
+    public async Task<ICollection<Item>> GetAlternatives(int id)
+    {
+        return await _repository.GetAlternativeItems(id);
+    }
+
     public async Task<Item?> GetItemDetailsAsync(int id)
     {
         return await _repository.GetByIdAsync(id);
@@ -37,16 +53,19 @@ public class ItemService : IItemService
 
     public async Task<Item?> RemoveItemAsync(Item item)
     {
-        return await _repository.RemoveFromCart(item.Id);
+        _repository.RemoveItemsByAltId((int)item.AlternativeItemId);
+
+        return item;
     }
 
-    public async Task<ICollection<Item>> SyncCartItemsAsync(ICollection<Item> items)
+    public async Task<ICollection<Item>> SyncCartItemsAsync(int cartId, ICollection<Item> items)
     {
         if (!items.Any())
         {
+            await _repository.RemoveItemsInCart(cartId);
             return items;
         }
-        var originalItems = await _repository.GetAllItemsFromCartAsync(items.FirstOrDefault().Id);
+        var originalItems = await _repository.GetAllItemsFromCartAsync(cartId);
         if (originalItems.Any())
         {
             var oiids = originalItems.Select(oi => oi.Id); // original items ids
@@ -67,7 +86,7 @@ public class ItemService : IItemService
             {
                 await _repository.RemoveFromCart(item.Id);
             });
-            return await _repository.GetAllItemsFromCartAsync(items.FirstOrDefault().Id);
+            return await _repository.GetAllItemsFromCartAsync(cartId);
         }
 
         items.ToList().ForEach(async item =>

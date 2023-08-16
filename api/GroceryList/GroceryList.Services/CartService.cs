@@ -20,15 +20,20 @@ public class CartService : ICartService, IUserCartService
         await _userCartRepository.CreateUserCartAsync(cartId, email, addedBy);
     }
 
-    public async Task CreateNewCartForUserAsync(string email)
+    public async Task<UserCart> CreateNewCartForUserAsync(string email)
     {
         var cart = await _cartRepository.CreateCartAsync(email);
-        await _userCartRepository.CreateUserCartAsync(cart.Id, email, email);
+        return await _userCartRepository.CreateUserCartAsync(cart.Id, email, email);
     }
 
-    public async Task<ICollection<UserCart>> GetCartUsers(int cartId)
+    public async Task<ICollection<UserCart>> GetCartUsersAync(int cartId)
     {
         return await _userCartRepository.GetAllUsersFromCartAsync(cartId);
+    }
+
+    public async Task<UserCart> GetUserCartAsync(string email)
+    {
+        return await _userCartRepository.GetUserCartByEmailAsync(email);
     }
 
     public async Task RemoveUserOfCartAsync(int cartId, string email)

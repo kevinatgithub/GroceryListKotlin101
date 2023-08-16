@@ -4,5 +4,6 @@ namespace GroceryList.Services.Interfaces;
 
 public interface IUserCartService
 {
-    public Task<ICollection<UserCart>> GetCartUsers(int cartId);
+    public Task<ICollection<UserCart>> GetCartUsersAync(int cartId);
+    public Task<UserCart> GetUserCartAsync(string email);
 }

@@ -87,6 +87,8 @@ public static class ProgramExtensions
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<IUserCartService, CartService>();
         services.AddScoped<IItemService, ItemService>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserService, UserService>();
         return services;
     }
 }

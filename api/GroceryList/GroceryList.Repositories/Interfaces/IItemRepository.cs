@@ -9,4 +9,7 @@ public interface IItemRepository
     public Task<Item?> CreateItemAsync(Item item);
     public Item? UpdateItem(Item item);
     public Task<Item?> RemoveFromCart(int id);
+    public Task RemoveItemsInCart(int cartId);
+    public Task<ICollection<Item>> GetAlternativeItems(int id);
+    public void RemoveItemsByAltId(int id);
 }

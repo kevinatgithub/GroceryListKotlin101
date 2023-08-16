@@ -1,4 +1,5 @@
 using GroceryList.Api;
+using GroceryList.Api.Middlewares;
 using GroceryList.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -30,6 +32,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseMiddleware<SampleMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

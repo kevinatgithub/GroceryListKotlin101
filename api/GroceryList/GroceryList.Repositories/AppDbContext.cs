@@ -25,4 +25,5 @@ public class AppDbContext : IdentityDbContext
     public DbSet<Cart> Carts { get; set; }
     public DbSet<Item> Items { get; set; }
     public DbSet<UserCart> UserCarts { get; set; }
+    public DbSet<User> Users { get; set; }
 }

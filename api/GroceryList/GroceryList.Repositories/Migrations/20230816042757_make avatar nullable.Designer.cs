@@ -4,6 +4,7 @@ using GroceryList.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroceryList.Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230816042757_make avatar nullable")]
+    partial class makeavatarnullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,9 +84,6 @@ namespace GroceryList.Repositories.Migrations
 
                     b.Property<string>("Avatar")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
