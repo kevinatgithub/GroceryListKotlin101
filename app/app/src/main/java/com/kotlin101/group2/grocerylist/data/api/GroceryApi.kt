@@ -1,6 +1,6 @@
-package com.group2.kotlinlab.data
+package com.kotlin101.group2.grocerylist.data.api
 
-import com.group2.kotlinlab.data.models.*
+import com.kotlin101.group2.grocerylist.data.api.models.*
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -29,7 +29,7 @@ interface GroceryApi {
     suspend fun getCartItems(@Header("Authorization") auth: String) : ArrayList<Item>;
 
     @POST("cart/sync")
-    suspend fun syncCart(@Body syncRequest :SyncRequest, @Header("Authorization") auth: String)
+    suspend fun syncCart(@Body syncRequest : SyncRequest, @Header("Authorization") auth: String)
 
     @GET("cart/users")
     suspend fun getCartUsers(@Header("Authorization") auth: String) : ArrayList<UserResponse>

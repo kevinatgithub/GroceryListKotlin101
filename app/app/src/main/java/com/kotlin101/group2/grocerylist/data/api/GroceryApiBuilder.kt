@@ -1,4 +1,4 @@
-package com.group2.kotlinlab.data
+package com.kotlin101.group2.grocerylist.data.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
