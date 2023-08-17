@@ -1,4 +1,5 @@
 ﻿using GroceryList.Api.Extensions;
+using GroceryList.Api.Models;
 using GroceryList.Domain;
 using GroceryList.Services;
 using GroceryList.Services.Interfaces;
@@ -40,10 +41,10 @@ public class CartController : ControllerBase
     }
 
     [HttpPost("sync")]
-    public async Task<IActionResult> SyncList(ICollection<Item> items)
+    public async Task<IActionResult> SyncList(SyncRequest model)
     {
         var user = User.Claims.Current();
-        await _itemService.SyncCartItemsAsync(user.CartId, items);
+        await _itemService.SyncCartItemsAsync(user.CartId, model.Items);
         return Ok();
     }
 

@@ -57,11 +57,11 @@ public class UserController : ControllerBase
             {
                 var userCart = await _cartService.CreateNewCartForUserAsync(user.Email);
                 await _userService.Create(user.Email, register.Name, userCart.CartId);
-                return Ok("SUCCESS");
+                return Ok(new TextResponse("SUCCESS"));
             }
             else
             {
-                return BadRequest("FAILED");
+                return BadRequest(new TextResponse("FAILED"));
             }
         }
         else
@@ -81,7 +81,7 @@ public class UserController : ControllerBase
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is null)
         {
-            return NotFound($"User with email {request.Email} not found!");
+            return NotFound(new TextResponse($"User with email {request.Email} not found!"));
         }
 
         if (await _userManager.CheckPasswordAsync(user, request.Password))
@@ -90,39 +90,39 @@ public class UserController : ControllerBase
             {
                 var token = GenerateToken(user);
                 //return Ok($"Bearer {token}");
-                return Ok(token);
+                return Ok(new TextResponse(token));
             }
 
-            return BadRequest("Email is not confirmed. Please go to your email account");
+            return BadRequest(new TextResponse("Email is not confirmed. Please go to your email account"));
         }
 
-        return Unauthorized("Password is not valid");
+        return Unauthorized(new TextResponse("Password is not valid"));
     }
 
     [AllowAnonymous]
     [HttpPost("contactsignup")]
-    public async Task<IActionResult> AddUserToCart(int cartId, string email, string name, string password)
+    public async Task<IActionResult> AddUserToCart(ContactSignupRequest model)
     {
         var user = new IdentityUser
         {
-            Email = email,
-            UserName = email,
-            NormalizedUserName = name
+            Email = model.Email,
+            UserName = model.Email,
+            NormalizedUserName = model.Name
         };
-        var result = await _userManager.CreateAsync(user, password);
+        var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             if ((await _userManager.ConfirmEmailAsync(user, code)).Succeeded)
             {
-                await _cartService.AddUserToCartAsync(cartId, email, user.Email);
-                await _userService.Create(user.Email, name, cartId);
-                return Ok("SUCCESS");
+                await _cartService.AddUserToCartAsync(model.CartId, model.Email, user.Email);
+                await _userService.Create(user.Email, model.Name, model.CartId);
+                return Ok(new TextResponse("SUCCESS"));
             }
             else
             {
-                return BadRequest("FAILED");
+                return BadRequest(new TextResponse("FAILED"));
             }
         }
         else
