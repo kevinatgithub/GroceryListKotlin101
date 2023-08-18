@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -66,11 +67,7 @@ public class UserController : ControllerBase
         }
         else
         {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(error.Code, error.Description);
-            }
-            return BadRequest(ModelState);
+            return BadRequest(new TextResponse(result.Errors.First().Description));
         }
     }
 
@@ -127,11 +124,7 @@ public class UserController : ControllerBase
         }
         else
         {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(error.Code, error.Description);
-            }
-            return BadRequest(ModelState);
+            return BadRequest(new TextResponse(result.Errors.First().Description));
         }
     }
 

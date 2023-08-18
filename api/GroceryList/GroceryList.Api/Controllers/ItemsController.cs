@@ -30,8 +30,11 @@ public class ItemsController : ControllerBase
             Description = model.Description,
             IsPrimary = model.AlternativeItemId == 0,
             Name = model.Name,
-            Price = model.Price,
-            Status = (int)ItemStatus.DEFAULT
+            PricePerUnit = model.PricePerUnit,
+            Quantity = model.Quantity,
+            Status = (int)ItemStatus.DEFAULT,
+            img = model.img,
+            imgUrl = model.imgUrl,
         };
 
         await _itemService.CreateItemAsync(item);
@@ -55,7 +58,10 @@ public class ItemsController : ControllerBase
         }
         item.Description = model.Description;
         item.Name = model.Name; 
-        item.Price = model.Price;
+        item.PricePerUnit = model.PricePerUnit;
+        item.Quantity = model.Quantity;
+        item.img = model.img;
+        item.imgUrl = model.imgURL;
 
         _itemService.UpdateItem(item);
         return Ok(item);
