@@ -31,6 +31,11 @@ class SignInActivity : AppCompatActivity() {
         api = GroceryApiBuilder.GetInstance()
         pref = GroceryAppSharedPreference.getInstance(this)
 
+        if (!pref.getUser()!!.email.isEmpty()){
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+
         with(binding) {
             tvSignUp.setOnClickListener {
                 gotoSignUp()
