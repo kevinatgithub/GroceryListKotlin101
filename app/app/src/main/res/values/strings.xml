@@ -17,4 +17,9 @@
     <string name="update">update</string>
     <string name="please_enter_your_email_address">Enter your email address</string>
     <string name="please_enter_your_full_name">Enter your full name</string>
+    <string name="flavor_variant">FLAVOR/VARIANT</string>
+    <string name="price">PRICE</string>
+    <string name="details">DETAILS</string>
+    <string name="add_item_to_list">Add Item to List</string>
+    <string name="save">SAVE</string>
 </resources>
