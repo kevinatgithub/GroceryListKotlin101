@@ -21,4 +21,9 @@
     <string name="item_name">Item Name</string>
     <string name="item_description">Item Description</string>
     <string name="more_item_description">More Item Description</string>
+    <string name="flavor_variant">FLAVOR/VARIANT</string>
+    <string name="price">PRICE</string>
+    <string name="details">DETAILS</string>
+    <string name="add_item_to_list">Add Item to List</string>
+    <string name="save">SAVE</string>
 </resources>
