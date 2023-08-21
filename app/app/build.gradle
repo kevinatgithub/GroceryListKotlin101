@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'io.realm.kotlin'
 }
 
 android {
@@ -52,4 +53,11 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //Realm
+    implementation 'io.realm.kotlin:library-base:1.10.0'
+    implementation 'io.realm.kotlin:library-sync:1.10.0'// If using Device Sync
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0' // If using coroutines with the SDK
+
+    implementation 'com.squareup.picasso:picasso:2.8'
 }
