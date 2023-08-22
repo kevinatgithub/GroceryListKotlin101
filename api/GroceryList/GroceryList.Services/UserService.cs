@@ -27,4 +27,9 @@ public class UserService : IUserService
     {
         return repository.Update(user);
     }
+
+    public async Task UpdateProfileAsync(string email, string name, string avatar)
+    {
+        await repository.UpdateProfile(email, name, avatar);
+    }
 }

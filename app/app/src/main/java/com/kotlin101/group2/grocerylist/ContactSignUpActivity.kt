@@ -15,6 +15,10 @@ class ContactSignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         with(binding) {
+            layoutHeader.tvTitle.text = "Add Contact"
+            layoutHeader.ivBack.setOnClickListener {
+                finish()
+            }
             btnSignUp.setOnClickListener {
                 gotoSignUp()
             }

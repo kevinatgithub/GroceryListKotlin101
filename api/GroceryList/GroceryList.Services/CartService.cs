@@ -8,11 +8,13 @@ public class CartService : ICartService, IUserCartService
 {
     private readonly ICartRepository _cartRepository;
     private readonly IUserCartRepository _userCartRepository;
+    private readonly IUserRepository _userRepository;
 
-    public CartService(ICartRepository cartRepository, IUserCartRepository userCartRepository)
+    public CartService(ICartRepository cartRepository, IUserCartRepository userCartRepository, IUserRepository userRepository)
     {
         _cartRepository = cartRepository;
         _userCartRepository = userCartRepository;
+        _userRepository = userRepository;
     }
 
     public async Task AddUserToCartAsync(int cartId, string email, string addedBy)
@@ -26,9 +28,10 @@ public class CartService : ICartService, IUserCartService
         return await _userCartRepository.CreateUserCartAsync(cart.Id, email, email);
     }
 
-    public async Task<ICollection<UserCart>> GetCartUsersAync(int cartId)
+    public async Task<ICollection<User>> GetCartUsersAync(int cartId)
     {
-        return await _userCartRepository.GetAllUsersFromCartAsync(cartId);
+        var userCarts = await _userCartRepository.GetAllUsersFromCartAsync(cartId);
+        return await _userRepository.GetUsers(userCarts.Select(u => u.Email));
     }
 
     public async Task<UserCart> GetUserCartAsync(string email)

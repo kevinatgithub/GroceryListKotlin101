@@ -1,9 +1,8 @@
 package com.kotlin101.group2.grocerylist.data.api.models
 
-data class UserResponse(
+data class User(
     val cartId: Int,
-    val cartItems: List<Any>,
     val email: String,
-    var name: String,
-    var avatar: String?
+    val name: String,
+    val avatar: String?
 )

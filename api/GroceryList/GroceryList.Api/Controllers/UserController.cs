@@ -137,6 +137,22 @@ public class UserController : ControllerBase
         var cartId = User.Claims.LastOrDefault(c => c.Type == "CartId")?.Value;
         var user = User.Claims.Current();
         user.CartItems = await _itemService.GetItemsFromCartAsync(int.Parse(cartId));
+        var u = await _userService.Get(email);
+        user.Avatar = u.Avatar;
+        return Ok(user);
+    }
+
+    [HttpPut]
+    [Authorize]
+    public async Task<IActionResult> UpdateProfile(UpdateUserRequest model)
+    {
+        var user = User.Claims.Current();
+        if (model.NewPassword != null && model.NewPassword.Length > 0)
+        {
+            var u = await _userManager.FindByEmailAsync(user.Email);
+            await _userManager.ChangePasswordAsync(u, model.OldPassword, model.NewPassword);
+        }
+        await _userService.UpdateProfileAsync(user.Email, user.Name, user.Avatar);
         return Ok(user);
     }
 

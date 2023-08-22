@@ -47,7 +47,7 @@ class GroceryAppSharedPreference {
     }
 
     fun getUser() : UserResponse{
-        var userStr = preference.getString(USER, gson.toJson(UserResponse(0,ArrayList<Any>(),"","")))
+        var userStr = preference.getString(USER, gson.toJson(UserResponse(0,ArrayList<Any>(),"","",null)))
         return gson.fromJson(userStr, UserResponse::class.java)
     }
 

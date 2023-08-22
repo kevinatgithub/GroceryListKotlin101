@@ -3,6 +3,7 @@ package com.kotlin101.group2.grocerylist
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.RoundedCorner
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kotlin101.group2.grocerylist.adapters.ItemListAdapter
@@ -13,6 +14,7 @@ import com.kotlin101.group2.grocerylist.data.db.GroceryDb
 import com.kotlin101.group2.grocerylist.data.db.LocalItem
 import com.kotlin101.group2.grocerylist.data.sharedpreference.GroceryAppSharedPreference
 import com.kotlin101.group2.grocerylist.databinding.ActivityMainBinding
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -34,13 +36,15 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
 
+        val user = pref.getUser()
+
         with(binding){
 
             layoutHeader.tvTitle.text = "Item List"
             layoutHeader.ivBack.setImageDrawable(getDrawable(R.drawable.ic_menu))
             layoutHeader.ivBack.setOnClickListener {
                 // TODO: Change to open drawer
-                startActivity(Intent(this@MainActivity, UpdateProfileActivity::class.java))
+                startActivity(Intent(this@MainActivity, ContactsActivity::class.java))
                 finish()
             }
 
@@ -48,6 +52,15 @@ class MainActivity : AppCompatActivity() {
             pbLoading.visibility = View.VISIBLE
             rvItems.visibility = View.GONE
             rvItems.layoutManager = LinearLayoutManager(this@MainActivity)
+
+            if (user.avatar != null){
+                Picasso.get().load(user.avatar).into(ivAvatar)
+            }
+
+            ivAvatar.setOnClickListener {
+                startActivity(Intent(this@MainActivity, UpdateProfileActivity::class.java))
+                finish()
+            }
 
             fabAddItem.setOnClickListener {
                 startActivity(Intent(this@MainActivity, UpdateItemActivity::class.java))

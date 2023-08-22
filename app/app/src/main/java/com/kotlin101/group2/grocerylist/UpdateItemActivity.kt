@@ -120,9 +120,9 @@ class UpdateItemActivity : AppCompatActivity() {
                             quantity = quantity
                             imgUrl = this@UpdateItemActivity.imgUrl
                         }
-                        db.update(item!!)
                         val updateItemRequest = api.updateItem(item!!.id, UpdateItemRequest(item!!.description, "", "", item!!.name, item!!.pricePerUnit, item!!.quantity), pref.getToken().toString())
                         if (updateItemRequest.isSuccessful){
+                            db.update(item!!)
                             withContext(Dispatchers.Main){
                                 Toast.makeText(this@UpdateItemActivity,"Item has been updated", Toast.LENGTH_SHORT).show()
                                 startActivity(Intent(this@UpdateItemActivity,MainActivity::class.java))
@@ -137,9 +137,9 @@ class UpdateItemActivity : AppCompatActivity() {
                             quantity = quantity
                             imgUrl = this@UpdateItemActivity.imgUrl
                         }
-                        db.add(lItem)
                         val addItemRequest = api.addItem(CreateItemRequest(0,lItem.description,"",imgUrl!!,lItem.name,lItem.pricePerUnit,lItem.quantity),pref.getToken().toString())
                         if (addItemRequest.isSuccessful){
+                            db.add(lItem)
                             withContext(Dispatchers.Main){
                                 Toast.makeText(this@UpdateItemActivity,"Item added to list", Toast.LENGTH_SHORT).show()
                                 startActivity(Intent(this@UpdateItemActivity,MainActivity::class.java))
