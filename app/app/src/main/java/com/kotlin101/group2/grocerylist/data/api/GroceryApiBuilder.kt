@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object GroceryApiBuilder {
     val API_BASE_URL = "https://kevkotlin101g2.azurewebsites.net/api/"
 
-    fun GetInstance(): GroceryApi {
+    fun getInstance(): GroceryApi {
         var api = Retrofit.Builder()
             .baseUrl(API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())

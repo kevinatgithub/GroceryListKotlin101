@@ -1,5 +1,6 @@
 package com.kotlin101.group2.grocerylist
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -24,15 +25,34 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        api = GroceryApiBuilder.GetInstance()
+        api = GroceryApiBuilder.getInstance()
         pref = GroceryAppSharedPreference.getInstance(this)
         db = GroceryDb(this)
 
+        if (pref.getToken() == null){
+            startActivity(Intent(this,SignInActivity::class.java))
+            finish()
+        }
+
         with(binding){
+
+            layoutHeader.tvTitle.text = "Item List"
+            layoutHeader.ivBack.setImageDrawable(getDrawable(R.drawable.ic_menu))
+            layoutHeader.ivBack.setOnClickListener {
+                // TODO: Change to open drawer
+                startActivity(Intent(this@MainActivity, UpdateProfileActivity::class.java))
+                finish()
+            }
+
             tvHelperText.visibility = View.GONE
             pbLoading.visibility = View.VISIBLE
             rvItems.visibility = View.GONE
             rvItems.layoutManager = LinearLayoutManager(this@MainActivity)
+
+            fabAddItem.setOnClickListener {
+                startActivity(Intent(this@MainActivity, UpdateItemActivity::class.java))
+                finish()
+            }
         }
 
         loadItemsList()

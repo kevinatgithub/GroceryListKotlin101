@@ -4,19 +4,20 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="8dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/glStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent=".03"/>
+        app:layout_constraintGuide_percent="0.030092593" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivBack"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/ic_back"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="@id/glStart"
@@ -24,10 +25,10 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvTitle"
+        android:id="@+id/tvPageTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_item_to_list"
+        tools:text="@string/page_header"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="20sp"

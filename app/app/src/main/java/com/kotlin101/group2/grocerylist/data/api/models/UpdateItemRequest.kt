@@ -5,6 +5,6 @@ data class UpdateItemRequest(
     val img: Any,
     val imgURL: Any,
     val name: String,
-    val pricePerUnit: Int,
+    val pricePerUnit: Double,
     val quantity: Int
 )
