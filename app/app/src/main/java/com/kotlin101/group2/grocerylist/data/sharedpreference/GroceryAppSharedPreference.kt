@@ -3,6 +3,7 @@ package com.kotlin101.group2.grocerylist.data.sharedpreference
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import com.google.gson.Gson
 import com.kotlin101.group2.grocerylist.data.api.models.UserResponse
 
@@ -11,7 +12,7 @@ class GroceryAppSharedPreference {
     private lateinit var gson: Gson
 
     constructor(activity: Activity){
-        preference = activity.getPreferences(Context.MODE_PRIVATE)
+        preference = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
         gson = Gson()
     }
 
@@ -33,6 +34,9 @@ class GroceryAppSharedPreference {
 
     fun getToken(): String?{
         var token = preference.getString(JWT, "")
+        if (token!!.isEmpty()){
+            return null
+        }
         return "bearer $token"
     }
 

@@ -28,10 +28,10 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        api = GroceryApiBuilder.GetInstance()
+        api = GroceryApiBuilder.getInstance()
         pref = GroceryAppSharedPreference.getInstance(this)
 
-        if (!pref.getUser()!!.email.isEmpty()){
+        if (pref.getToken() != null){
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }

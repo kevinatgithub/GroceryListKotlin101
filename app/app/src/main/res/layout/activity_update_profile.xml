@@ -6,27 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".SignUpActivity">
 
-    <ImageView
-        android:id="@+id/ivBackArrow"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/page_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/glStart"
-        app:layout_constraintTop_toBottomOf="@id/glTop"
-        app:srcCompat="?attr/actionModeCloseDrawable"
-        tools:layout_editor_absoluteY="42dp" />
+        layout="@layout/common_page_header"
+        app:layout_constraintBottom_toBottomOf="@id/glStart"
+        app:layout_constraintEnd_toEndOf="@id/glEnd"
+        app:layout_constraintStart_toStartOf="@id/glStart"
+        tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/tvUpdateProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update Profile"
-        android:layout_marginLeft="10dp"
-        tools:layout_editor_absoluteX="70dp"
-        tools:layout_editor_absoluteY="68dp"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toEndOf="@id/ivBackArrow"
-        app:layout_constraintTop_toBottomOf="@id/glTop"/>
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
@@ -36,7 +26,7 @@
         android:src="@drawable/ic_account_circle"
         app:layout_constraintStart_toStartOf="@id/glStart"
         app:layout_constraintEnd_toEndOf="@id/glEnd"
-        app:layout_constraintTop_toBottomOf="@id/tvUpdateProfile"/>
+        app:layout_constraintTop_toBottomOf="@id/glTop"/>
 
     <ImageView
         android:id="@+id/ivCamera"

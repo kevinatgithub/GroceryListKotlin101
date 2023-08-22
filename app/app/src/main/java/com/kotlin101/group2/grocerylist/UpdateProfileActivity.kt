@@ -2,6 +2,8 @@ package com.kotlin101.group2.grocerylist
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.kotlin101.group2.grocerylist.data.sharedpreference.GroceryAppSharedPreference
 import com.kotlin101.group2.grocerylist.databinding.ActivityUpdateProfileBinding
@@ -17,7 +19,8 @@ class UpdateProfileActivity : AppCompatActivity() {
         pref = GroceryAppSharedPreference.getInstance(this)
 
         with(binding){
-            ivBackArrow.setOnClickListener{
+            pageHeader.tvPageTitle.text = "Profile"
+            pageHeader.ivBack.setOnClickListener {
                 var token = pref.getToken()
                 if (token!!.isEmpty()){
                     startActivity(Intent(this@UpdateProfileActivity, SignInActivity::class.java))

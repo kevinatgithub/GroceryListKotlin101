@@ -2,7 +2,6 @@ package com.kotlin101.group2.grocerylist
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -30,7 +29,7 @@ class SignUpActivity: AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        api = GroceryApiBuilder.GetInstance()
+        api = GroceryApiBuilder.getInstance()
         pref = GroceryAppSharedPreference.getInstance(this)
 
         with(binding){

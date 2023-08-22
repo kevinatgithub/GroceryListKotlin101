@@ -21,9 +21,15 @@
     <string name="item_name">Item Name</string>
     <string name="item_description">Item Description</string>
     <string name="more_item_description">More Item Description</string>
-    <string name="flavor_variant">FLAVOR/VARIANT</string>
-    <string name="price">PRICE</string>
+    <string name="FLAVOR_VARIANT">FLAVOR/VARIANT</string>
+    <string name="PRICE_PER_UNIT">PRICE/UNIT</string>
     <string name="details">DETAILS</string>
     <string name="add_item_to_list">Add Item to List</string>
     <string name="save">SAVE</string>
+    <string name="enter_item_name">Enter Item Name</string>
+    <string name="provide_item_details">Provide Item Details</string>
+    <string name="price_per_unit">Price per Unit</string>
+    <string name="quantity">QUANTITY</string>
+    <string name="flavor_variant">Flavor/Variant</string>
+    <string name="page_header">Page Header</string>
 </resources>

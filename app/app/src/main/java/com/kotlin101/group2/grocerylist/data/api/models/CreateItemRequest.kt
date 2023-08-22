@@ -6,6 +6,6 @@ data class CreateItemRequest(
     val img: Any,
     val imgUrl: Any,
     val name: String,
-    val pricePerUnit: Int,
+    val pricePerUnit: Double,
     val quantity: Int
 )
