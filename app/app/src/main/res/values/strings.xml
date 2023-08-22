@@ -32,4 +32,6 @@
     <string name="quantity">QUANTITY</string>
     <string name="flavor_variant">Flavor/Variant</string>
     <string name="page_header">Page Header</string>
+    <string name="new_password_blank_for_no_changes">NEW PASSWORD (Blank if no changes)</string>
+    <string name="old_password">OLD PASSWORD (Blank if no changes)</string>
 </resources>

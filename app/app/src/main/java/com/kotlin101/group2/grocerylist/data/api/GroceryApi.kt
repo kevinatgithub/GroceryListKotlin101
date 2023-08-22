@@ -25,6 +25,9 @@ interface GroceryApi {
     @GET("user")
     suspend fun getCurrentUserInfo(@Header("Authorization") auth: String) : Response<UserResponse>;
 
+    @PUT("user")
+    suspend fun updateProfile(@Body updateProfile: UpdateProfileRequest, @Header("Authorization") auth: String)
+
     @GET("cart/items")
     suspend fun getCartItems(@Header("Authorization") auth: String) : ArrayList<Item>;
 
@@ -32,7 +35,7 @@ interface GroceryApi {
     suspend fun syncCart(@Body syncRequest : SyncRequest, @Header("Authorization") auth: String)
 
     @GET("cart/users")
-    suspend fun getCartUsers(@Header("Authorization") auth: String) : ArrayList<UserResponse>
+    suspend fun getCartUsers(@Header("Authorization") auth: String) : ArrayList<User>
 
     @DELETE("cart/users")
     suspend fun deleteUserFromCart(@Query("email") email:String, @Header("Authorization") auth: String)

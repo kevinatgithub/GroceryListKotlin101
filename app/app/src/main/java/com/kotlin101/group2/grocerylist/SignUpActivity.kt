@@ -97,7 +97,7 @@ class SignUpActivity: AppCompatActivity() {
                         var user = userRequest.body()
                         if (user != null){
                             pref.setToken(token!!)
-                            pref.setUser(UserResponse(user.cartId, user.cartItems, user.email, user.name))
+                            pref.setUser(UserResponse(user.cartId, user.cartItems, user.email, user.name, user.avatar))
 
                             withContext(Dispatchers.Main) {
                                 gotoUpdateProfile()

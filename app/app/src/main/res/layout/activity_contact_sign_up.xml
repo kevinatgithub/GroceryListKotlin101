@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ContactSignUpActivity">
 
+    <include
+        android:id="@+id/layout_header"
+        layout="@layout/layout_update_item_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/glStart"
+        app:layout_constraintEnd_toEndOf="@id/glEnd"
+        app:layout_constraintStart_toStartOf="@id/glStart"
+        tools:visibility="visible" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/glStart"
         android:layout_width="wrap_content"
