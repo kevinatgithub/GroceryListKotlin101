@@ -37,11 +37,19 @@ class SignInActivity : AppCompatActivity() {
         }
 
         with(binding) {
+
+            if (!GroceryAppHelpers.checkForInternet(this@SignInActivity)){
+                Toast.makeText(this@SignInActivity, "Please check internet connection.",Toast.LENGTH_LONG).show()
+            }
             tvSignUp.setOnClickListener {
                 gotoSignUp()
             }
             btnSignIn.setOnClickListener {
-                startSignInValidation()
+                if (!GroceryAppHelpers.checkForInternet(this@SignInActivity)){
+                    Toast.makeText(this@SignInActivity, "Please check internet connection.",Toast.LENGTH_LONG).show()
+                }else{
+                    startSignInValidation()
+                }
             }
         }
     }
@@ -74,24 +82,18 @@ class SignInActivity : AppCompatActivity() {
                     val token = signinRequest.body()!!.text
                     pref.setToken(token)
                     var user = pref.getUser()
-                    if (user.email.isEmpty()){
-                        val userRequest = api.getCurrentUserInfo("bearer $token")
-                        if (userRequest.isSuccessful){
-                            user = userRequest.body()!!
-                            pref.setUser(user)
-                            withContext(Dispatchers.Main){
-                                gotoMain()
-                            }
-                        }else{
-                            val errorResponse = Gson().fromJson(signinRequest.errorBody()!!.charStream(), TextResponse::class.java)
-                            withContext(Dispatchers.Main){
-                                Toast.makeText(this@SignInActivity, errorResponse.text,Toast.LENGTH_LONG).show()
-                                btnSignIn.isEnabled = true
-                            }
+                    val userRequest = api.getCurrentUserInfo("bearer $token")
+                    if (userRequest.isSuccessful){
+                        user = userRequest.body()!!
+                        pref.setUser(user)
+                        withContext(Dispatchers.Main){
+                            gotoMain()
                         }
                     }else{
-                        withContext(Dispatchers.Main) {
-                            gotoMain()
+                        val errorResponse = Gson().fromJson(signinRequest.errorBody()!!.charStream(), TextResponse::class.java)
+                        withContext(Dispatchers.Main){
+                            Toast.makeText(this@SignInActivity, errorResponse.text,Toast.LENGTH_LONG).show()
+                            btnSignIn.isEnabled = true
                         }
                     }
                 }else{

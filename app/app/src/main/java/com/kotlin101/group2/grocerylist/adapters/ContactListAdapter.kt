@@ -27,8 +27,9 @@ class ContactListAdapter(private val contacts: List<User>) : RecyclerView.Adapte
         val contact: User = contacts.get(position)
         with(holder){
             tvContactName.text = contact.name
-            if (contact.avatar != null && !contact.avatar.isEmpty())
-            Picasso.get().load(contact.avatar).into(ivPicture)
+            if (contact.avatar != null && !contact.avatar.isEmpty()){
+                Picasso.get().load(contact.avatar).into(ivPicture)
+            }
         }
     }
 }

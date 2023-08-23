@@ -16,7 +16,7 @@
         android:textSize="20sp"
         android:layout_marginLeft="20dp"/>
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_account_circle"

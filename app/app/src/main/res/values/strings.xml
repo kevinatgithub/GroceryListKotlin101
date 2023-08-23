@@ -12,7 +12,7 @@
     <string name="name">NAME</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="scan_qr_code">SCAN QR CODE</string>
-    <string name="contact_sign_up">You are signing up as a contact of</string>
+    <string name="contact_sign_up">You are signing up a contact of</string>
     <string name="update_name">Update Name</string>
     <string name="update">update</string>
     <string name="please_enter_your_email_address">Enter your email address</string>
@@ -34,4 +34,5 @@
     <string name="page_header">Page Header</string>
     <string name="new_password_blank_for_no_changes">NEW PASSWORD (Blank if no changes)</string>
     <string name="old_password">OLD PASSWORD (Blank if no changes)</string>
+    <string name="add_contact">Add Contact</string>
 </resources>

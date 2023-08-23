@@ -99,7 +99,7 @@
         android:id="@+id/tvEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/helper_text"
+        android:text="Enter contact's email address"
         android:textSize="14sp"
         android:textColor="@color/grey_500"
         android:paddingStart="10dp"
@@ -128,7 +128,7 @@
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/helper_text"
+        android:text="Enter contact's full name"
         android:textSize="14sp"
         android:textColor="@color/grey_500"
         android:paddingStart="10dp"
@@ -139,7 +139,7 @@
         android:id="@+id/etPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="@string/password"
+        android:hint="PASSWORD"
         android:background="@drawable/edittext_background"
         android:layout_marginTop="36dp"
         android:inputType="textPassword"
@@ -205,7 +205,7 @@
         app:layout_constraintBottom_toTopOf="@id/glBottom"/>
 
     <TextView
-        android:id="@+id/edit_name"
+        android:id="@+id/tvContactName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

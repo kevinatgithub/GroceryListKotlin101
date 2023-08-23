@@ -2,6 +2,7 @@ package com.kotlin101.group2.grocerylist
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kotlin101.group2.grocerylist.adapters.ContactListAdapter
@@ -41,9 +42,17 @@ class ContactsActivity: AppCompatActivity() {
 
         GlobalScope.launch {
             var users = api.getCartUsers(pref.getToken().toString())
+            users.remove(users.first {
+                it.email == pref.getUser().email
+            })
             withContext(Dispatchers.Main){
-                val adapter = ContactListAdapter(users)
-                binding.rvContacts.adapter = adapter
+                if (users.size == 0){
+                    binding.tvNoContacts.visibility = View.VISIBLE
+                }else{
+                    binding.tvNoContacts.visibility = View.GONE
+                    val adapter = ContactListAdapter(users)
+                    binding.rvContacts.adapter = adapter
+                }
             }
         }
     }

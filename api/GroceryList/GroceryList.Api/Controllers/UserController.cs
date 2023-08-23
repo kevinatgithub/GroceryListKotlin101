@@ -152,7 +152,7 @@ public class UserController : ControllerBase
             var u = await _userManager.FindByEmailAsync(user.Email);
             await _userManager.ChangePasswordAsync(u, model.OldPassword, model.NewPassword);
         }
-        await _userService.UpdateProfileAsync(user.Email, user.Name, user.Avatar);
+        await _userService.UpdateProfileAsync(user.Email, model.Name, model.Avatar);
         return Ok(user);
     }
 
