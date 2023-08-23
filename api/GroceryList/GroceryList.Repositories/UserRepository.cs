@@ -49,7 +49,8 @@ public class UserRepository : IUserRepository
         {
             user.Name = name;
             user.Avatar = avatar;
-            context.Update(user);
+            context.Users.Update(user);
+            context.SaveChanges();
         }
     }
 }

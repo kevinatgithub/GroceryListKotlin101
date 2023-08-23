@@ -1,6 +1,7 @@
 package com.kotlin101.group2.grocerylist
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -32,6 +33,7 @@ class UpdateProfileActivity : AppCompatActivity() {
         api = GroceryApiBuilder.getInstance()
         pref = GroceryAppSharedPreference.getInstance(this)
         user = pref.getUser()
+        profileUrl = user.avatar
 
         with(binding){
             pageHeader.tvPageTitle.text = "Profile"
@@ -62,7 +64,26 @@ class UpdateProfileActivity : AppCompatActivity() {
             ivCamera.setOnClickListener {
                 selectAvatar()
             }
+
+            btnSignOut.setOnClickListener {
+                confirmSignOut()
+            }
         }
+    }
+
+    private fun confirmSignOut() {
+        AlertDialog.Builder(this).apply {
+            title = "Sign out"
+            setMessage("Are you sure you wan't to sign out? Signing back in to the app will require internet connection.")
+            setPositiveButton(android.R.string.yes){ dialog, which ->
+                pref.setToken("")
+                startActivity(Intent(this@UpdateProfileActivity, SignInActivity::class.java))
+                finish()
+            }
+            setNegativeButton(android.R.string.no){ dialog, which ->
+                dialog.dismiss()
+            }
+        }.show()
     }
 
     private fun selectAvatar() {

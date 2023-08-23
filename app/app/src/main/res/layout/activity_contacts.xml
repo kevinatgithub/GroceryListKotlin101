@@ -53,15 +53,26 @@
         app:layout_constraintEnd_toEndOf="@id/glEnd"
         app:layout_constraintBottom_toBottomOf="@id/glBottom" />
 
+    <TextView
+        android:id="@+id/tvNoContacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No contacts yet.\nClick + Add Contact to add new contact"
+        app:layout_constraintTop_toTopOf="@id/glTop"
+        app:layout_constraintStart_toStartOf="@id/glStart"
+        app:layout_constraintEnd_toEndOf="@id/glEnd"
+        app:layout_constraintBottom_toBottomOf="@id/glBottom"
+        android:gravity="center"/>
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_add_contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription=""
-        app:icon="@android:drawable/ic_menu_edit"
+        app:icon="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="@id/glBottom"
         app:layout_constraintEnd_toEndOf="@id/glEnd"
-        android:text="Add Item"
+        android:text="@string/add_contact"
         android:backgroundTint="@color/yello_green"
         android:textColor="@color/black"
         />
