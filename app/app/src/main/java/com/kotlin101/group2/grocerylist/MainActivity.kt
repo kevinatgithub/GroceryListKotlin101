@@ -82,15 +82,15 @@ class MainActivity : AppCompatActivity() {
         }
         val transform: (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
         val adapter = ItemListAdapter(items.map { transform(it) }){
-            gotoUpdateItem(it)
+            gotoShowItem(it)
         }
         binding.rvItems.adapter = adapter
         binding.rvItems.adapter!!.notifyDataSetChanged()
     }
 
-    private fun gotoUpdateItem(itemId: Int) {
-        val i = Intent(this, UpdateItemActivity::class.java)
-        i.putExtra(UpdateItemActivity.ITEM_ID, itemId)
+    private fun gotoShowItem(itemId: Int) {
+        val i = Intent(this, ShowItemActivity::class.java)
+        i.putExtra(ShowItemActivity.ITEM_ID, itemId)
         startActivity(i)
         finish()
     }
@@ -102,13 +102,12 @@ class MainActivity : AppCompatActivity() {
             it.name
         }
 
-
         if (listItems.size > 0){
             switchItemListViewState(2)
             val transform: (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
             val listItems = listItems.map {transform(it)}
             val adapter = ItemListAdapter(listItems){
-                gotoUpdateItem(it)
+                gotoShowItem(it)
             }
             binding.rvItems.adapter = adapter
         }else{

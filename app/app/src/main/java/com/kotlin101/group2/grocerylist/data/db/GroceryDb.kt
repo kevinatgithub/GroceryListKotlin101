@@ -1,11 +1,12 @@
 package com.kotlin101.group2.grocerylist.data.db
 
+import android.R.id
 import android.content.Context
 import com.kotlin101.group2.grocerylist.data.api.models.Item
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
-import io.realm.kotlin.delete
 import io.realm.kotlin.query.RealmResults
+
 
 class GroceryDb(context: Context) {
     private lateinit var realm: Realm
@@ -68,9 +69,11 @@ class GroceryDb(context: Context) {
         return realm.query(LocalItem::class, "cartId == $cartId and "+condition!!).find()
     }
 
-    fun update(item: LocalItem){
-        realm.writeBlocking {
-            findLatest(all(item.cartId,"id == "+item.id)[0]).apply {
+    suspend fun update(item: LocalItem){
+        realm.write {
+            var r = query(LocalItem::class, "id == "+item.id).find()
+            var record = findLatest(r.first())
+            record.apply {
                 if (this != null){
                     alternativeItemId = item.alternativeItemId
                     cartId = item.cartId
@@ -86,12 +89,30 @@ class GroceryDb(context: Context) {
                     totalPrice = item.totalPrice
                 }
             }
+
+            /*findLatest(all(item.cartId,"id == "+item.id)[0]).apply {
+                if (this != null){
+                    alternativeItemId = item.alternativeItemId
+                    cartId = item.cartId
+                    description = item.description
+                    id = item.id
+                    img = item.img
+                    imgUrl = item.imgUrl
+                    isPrimary = item.isPrimary
+                    name = item.name
+                    pricePerUnit = item.pricePerUnit
+                    quantity = item.quantity
+                    status = item.status
+                    totalPrice = item.totalPrice
+                }
+            }*/
         }
     }
 
     fun delete(item: LocalItem){
         realm.writeBlocking {
-            delete(item)
+            var record = query(LocalItem::class,"id == "+ item.id).find()
+            delete(record)
         }
     }
 

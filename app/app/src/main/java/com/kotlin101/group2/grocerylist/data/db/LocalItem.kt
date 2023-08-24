@@ -13,6 +13,6 @@ class LocalItem() : RealmObject {
     var name: String = ""
     var pricePerUnit: Double = 0.0
     var quantity: Int = 0
-    var status: Int = 0
+    var status: Int = 1
     var totalPrice: Double = 0.0
 }

@@ -124,6 +124,7 @@ public class ItemsController : ControllerBase
         {
             item.IsPrimary = false;
             item.AlternativeItemId = itemId;
+            item.Status = (int)ItemStatus.DONE;
             _itemService.UpdateItem(item);
         });
         item1.IsPrimary = true;
@@ -146,6 +147,7 @@ public class ItemsController : ControllerBase
         {
             item.IsPrimary = false;
             item.AlternativeItemId = itemId;
+            item.Status = (int)ItemStatus.NOT_AVAILABLE;
             _itemService.UpdateItem(item);
         });
         item1.IsPrimary = true;

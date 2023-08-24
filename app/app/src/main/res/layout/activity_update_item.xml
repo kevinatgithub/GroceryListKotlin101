@@ -172,7 +172,8 @@
         android:textColor="@color/grey_500"
         app:layout_constraintStart_toStartOf="@id/glStart"
         app:layout_constraintEnd_toEndOf="@id/glEnd"
-        app:layout_constraintTop_toBottomOf="@+id/etItemPrice"/>
+        app:layout_constraintTop_toBottomOf="@+id/etItemPrice"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tvItemFlavor"
@@ -183,7 +184,8 @@
         android:textColor="@color/grey_500"
         android:paddingStart="10dp"
         app:layout_constraintTop_toBottomOf="@id/etItemFlavor"
-        app:layout_constraintStart_toStartOf="@id/glStart" />
+        app:layout_constraintStart_toStartOf="@id/glStart"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/photoBox"
