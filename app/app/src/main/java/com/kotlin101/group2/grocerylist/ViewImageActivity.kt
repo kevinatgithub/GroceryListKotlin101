@@ -25,7 +25,11 @@ class ViewImageActivity: AppCompatActivity() {
 
 
         with(binding){
-            layoutHeader.tvTitle.text = "Select Image"
+            if (showButton == true){
+                layoutHeader.tvTitle.text = "Select Image"
+            }else{
+                layoutHeader.tvTitle.text = "View Image"
+            }
             layoutHeader.ivBack.setOnClickListener {
                 finish()
             }

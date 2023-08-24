@@ -39,12 +39,29 @@ class ItemListAdapter(private val items: List<Item>, private val callback: (id:I
             tvName.text = applyText(item.name)
             tvDesc1.text = applyText(item.description)
             tvDesc2.text = "P ${applyText(item.totalPrice)} | P ${applyText(item.pricePerUnit)} per unit x ${applyText(item.quantity)} pcs"
+            ivStatus.visibility = View.VISIBLE
+            val p = Picasso.get()
+            when(item.status){
+                2->{
+                    p.load(R.drawable.ic_check).into(ivStatus)
+                }
+                3->{
+                    p.load(android.R.drawable.ic_menu_close_clear_cancel).into(ivStatus)
+                }
+                1->{
+                    ivStatus.visibility = View.GONE
+                }
+                else->{
+                    ivStatus.visibility = View.GONE
+                }
+            }
         }
     }
 }
 
 class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     val card: MaterialCardView = itemView.findViewById(R.id.card)
+    val ivStatus: ImageView = itemView.findViewById(R.id.ivStatus)
     val ivImg: ImageView = itemView.findViewById(R.id.iv_item_image)
     val tvName: TextView = itemView.findViewById(R.id.tv_item_name)
     val tvDesc1: TextView = itemView.findViewById(R.id.tv_item_description_1)
