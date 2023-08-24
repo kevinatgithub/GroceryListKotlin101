@@ -4,6 +4,7 @@ import android.content.Context
 import com.kotlin101.group2.grocerylist.data.api.models.Item
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.delete
 import io.realm.kotlin.query.RealmResults
 
 class GroceryDb(context: Context) {
@@ -60,16 +61,16 @@ class GroceryDb(context: Context) {
         }
     }
 
-    fun all(condition: String? = null): RealmResults<LocalItem>{
+    fun all(cartId: Int, condition: String? = null): RealmResults<LocalItem>{
         if (condition == null){
-            return realm.query(LocalItem::class).find()
+            return realm.query(LocalItem::class, "cartId == $cartId").find()
         }
-        return realm.query(LocalItem::class, condition!!).find()
+        return realm.query(LocalItem::class, "cartId == $cartId and "+condition!!).find()
     }
 
     fun update(item: LocalItem){
         realm.writeBlocking {
-            findLatest(all("id == $item.id")[0]).apply {
+            findLatest(all(item.cartId,"id == "+item.id)[0]).apply {
                 if (this != null){
                     alternativeItemId = item.alternativeItemId
                     cartId = item.cartId
@@ -91,6 +92,12 @@ class GroceryDb(context: Context) {
     fun delete(item: LocalItem){
         realm.writeBlocking {
             delete(item)
+        }
+    }
+
+    fun clearCart(cartId: Int){
+        realm.writeBlocking {
+            delete(query(LocalItem::class,"cartId == $cartId"))
         }
     }
 }

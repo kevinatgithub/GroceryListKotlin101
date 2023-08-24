@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import com.kotlin101.group2.grocerylist.GroceryAppHelpers.applyText
 import com.kotlin101.group2.grocerylist.data.api.GroceryApi
 import com.kotlin101.group2.grocerylist.data.api.GroceryApiBuilder
 import com.kotlin101.group2.grocerylist.data.api.models.CreateItemRequest
@@ -35,6 +36,10 @@ class UpdateItemActivity : AppCompatActivity() {
     private var item : LocalItem? = null
     private var imgUrl : String? = null
 
+    companion object{
+        val ITEM_ID : String = "ITEM_ID"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdateItemBinding.inflate(layoutInflater)
@@ -56,15 +61,16 @@ class UpdateItemActivity : AppCompatActivity() {
                 etItemName.setText(item!!.name)
                 etItemDetails.setText(item!!.description)
                 etItemPrice.setText(item!!.pricePerUnit.toString())
-                etQuantity.setText(item!!.quantity)
+                etQuantity.setText(item!!.quantity.toString())
                 photoBox.setOnClickListener {
                     val searchIntent = Intent(this@UpdateItemActivity, ImageSearchActivity::class.java)
-                    searchIntent.putExtra(ImageSearchActivity.KEYWORD, item!!.name)
+                    searchIntent.putExtra(ImageSearchActivity.KEYWORD, item!!.name + " grocery item")
                     startImageSearch.launch(searchIntent)
                 }
-                if (item!!.imgUrl != null){
+                if (item!!.imgUrl != null && !item!!.imgUrl.toString().isEmpty()){
                     Picasso.get().load(item!!.imgUrl).into(photoBox)
-                }else if (item!!.img != null){
+                }
+                /*else if (item!!.img != null){
                     val base64Image: String = item!!.img!!.split(",").get(1)
                     val imageAsBytes: ByteArray = Base64.decode(base64Image.toByteArray(), Base64.DEFAULT)
                     photoBox.setImageBitmap(
@@ -74,7 +80,7 @@ class UpdateItemActivity : AppCompatActivity() {
                             imageAsBytes.size
                         )
                     )
-                }
+                }*/
             }else{
                 photoBox.setOnClickListener {
                     newImageSearch()
@@ -111,18 +117,18 @@ class UpdateItemActivity : AppCompatActivity() {
                 if (!etQuantity.text!!.isEmpty()){
                     quantity = etQuantity.text.toString().toInt()
                 }
+                var photoUrl = ""
+                if (imgUrl != null && !imgUrl!!.isEmpty()){
+                    photoUrl = imgUrl!!
+                }else{
+                    photoUrl = item?.imgUrl!!
+                }
                 GlobalScope.launch {
                     if (item != null){
-                        item!!.apply {
-                            name = etItemName.text.toString()
-                            description = etItemDetails.text.toString()
-                            pricePerUnit = pricePerUnit
-                            quantity = quantity
-                            imgUrl = this@UpdateItemActivity.imgUrl
-                        }
-                        val updateItemRequest = api.updateItem(item!!.id, UpdateItemRequest(item!!.description, "", "", item!!.name, item!!.pricePerUnit, item!!.quantity), pref.getToken().toString())
+                        val updateItemRequest = api.updateItem(item!!.id, UpdateItemRequest(etItemDetails.text.toString(), "", photoUrl!!, etItemName.text.toString(), pricePerUnit, quantity), pref.getToken().toString())
                         if (updateItemRequest.isSuccessful){
-                            db.update(item!!)
+                            val apiItem = updateItemRequest.body()
+                            db.update(GroceryDb.apiToDb(apiItem!!))
                             withContext(Dispatchers.Main){
                                 Toast.makeText(this@UpdateItemActivity,"Item has been updated", Toast.LENGTH_SHORT).show()
                                 startActivity(Intent(this@UpdateItemActivity,MainActivity::class.java))
@@ -131,15 +137,16 @@ class UpdateItemActivity : AppCompatActivity() {
                         }
                     } else{
                         val lItem = LocalItem().apply {
+                            cartId = pref.getUser().cartId
                             name = etItemName.text.toString()
                             description = etItemDetails.text.toString()
-                            pricePerUnit = pricePerUnit
-                            quantity = quantity
-                            imgUrl = this@UpdateItemActivity.imgUrl
                         }
-                        val addItemRequest = api.addItem(CreateItemRequest(0,lItem.description,"",imgUrl!!,lItem.name,lItem.pricePerUnit,lItem.quantity),pref.getToken().toString())
+                        lItem.pricePerUnit = pricePerUnit
+                        lItem.quantity = quantity
+                        val addItemRequest = api.addItem(CreateItemRequest(0,lItem.description,"",photoUrl!!,lItem.name,lItem.pricePerUnit,lItem.quantity),pref.getToken().toString())
                         if (addItemRequest.isSuccessful){
-                            db.add(lItem)
+                            val newItem = addItemRequest.body()
+                            db.add(GroceryDb.apiToDb(newItem!!))
                             withContext(Dispatchers.Main){
                                 Toast.makeText(this@UpdateItemActivity,"Item added to list", Toast.LENGTH_SHORT).show()
                                 startActivity(Intent(this@UpdateItemActivity,MainActivity::class.java))
@@ -158,9 +165,9 @@ class UpdateItemActivity : AppCompatActivity() {
     }
 
     private fun loadItemFromExtra() {
-        val itemId = intent.extras?.getInt("ITEM_ID", 0)
+        val itemId = intent.extras?.getInt(ITEM_ID, 0)
         if (itemId != 0) {
-            val items = db.all("id == $itemId")
+            val items = db.all(pref.getUser().cartId,"id == $itemId")
             if (items.size > 0) {
                 item = items[0]
             }

@@ -1,9 +1,21 @@
 package com.kotlin101.group2.grocerylist
 
+import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import com.kotlin101.group2.grocerylist.data.api.GroceryApi
+import com.kotlin101.group2.grocerylist.data.api.GroceryApiBuilder
+import com.kotlin101.group2.grocerylist.data.api.models.Item
+import com.kotlin101.group2.grocerylist.data.api.models.SyncRequest
+import com.kotlin101.group2.grocerylist.data.db.GroceryDb
+import com.kotlin101.group2.grocerylist.data.db.LocalItem
+import com.kotlin101.group2.grocerylist.data.sharedpreference.GroceryAppSharedPreference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -63,5 +75,45 @@ object GroceryAppHelpers {
             @Suppress("DEPRECATION")
             return networkInfo.isConnected
         }
+    }
+
+    fun syncApiWithDB(activity: Activity){
+        val api = GroceryApiBuilder.getInstance()
+        val db = GroceryDb(activity)
+        val pref = GroceryAppSharedPreference.getInstance(activity)
+        val user = pref.getUser()
+        val token = pref.getToken()
+        val transform: (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
+
+        val lItems = db.all(user.cartId)
+        GlobalScope.launch {
+            api.syncCart(SyncRequest(lItems.map { transform(it) }),token!!)
+        }
+    }
+
+    fun syncDbWithAPI(activity: Activity){
+        val api = GroceryApiBuilder.getInstance()
+        val db = GroceryDb(activity)
+        val pref = GroceryAppSharedPreference.getInstance(activity)
+        val user = pref.getUser()
+        val token = pref.getToken()
+
+        GlobalScope.launch {
+            val items = api.getCartItems(token!!)
+            db.clearCart(user.cartId)
+            withContext(Dispatchers.Main){
+                items.forEach {
+                    val item = GroceryDb.apiToDb(it)
+                    db.add(item)
+                }
+            }
+        }
+    }
+
+    fun applyText(txt: Any, default:String = "-") : String{
+        if (txt.toString().isEmpty()){
+            return default
+        }
+        return txt.toString()
     }
 }

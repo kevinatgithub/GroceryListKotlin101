@@ -3,8 +3,8 @@ package com.kotlin101.group2.grocerylist
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.RoundedCorner
 import android.view.View
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kotlin101.group2.grocerylist.adapters.ItemListAdapter
 import com.kotlin101.group2.grocerylist.data.api.GroceryApi
@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var api: GroceryApi
     private lateinit var pref: GroceryAppSharedPreference
     private lateinit var db: GroceryDb
+    private lateinit var listItems: List<LocalItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,22 +67,49 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this@MainActivity, UpdateItemActivity::class.java))
                 finish()
             }
+
+            etSearch.addTextChangedListener {
+                performSearch()
+            }
         }
 
         loadItemsList()
     }
 
+    private fun performSearch() {
+        val items = listItems.filter{
+            it.name.contains(binding.etSearch.text.toString(),true)
+        }
+        val transform: (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
+        val adapter = ItemListAdapter(items.map { transform(it) }){
+            gotoUpdateItem(it)
+        }
+        binding.rvItems.adapter = adapter
+        binding.rvItems.adapter!!.notifyDataSetChanged()
+    }
+
+    private fun gotoUpdateItem(itemId: Int) {
+        val i = Intent(this, UpdateItemActivity::class.java)
+        i.putExtra(UpdateItemActivity.ITEM_ID, itemId)
+        startActivity(i)
+        finish()
+    }
+
     private fun loadItemsList() {
         switchItemListViewState(1)
-        var items = db.all().sortedBy {
+
+        listItems = db.all(pref.getUser().cartId).sortedBy {
             it.name
         }
 
-        if (items.size > 0){
+
+        if (listItems.size > 0){
             switchItemListViewState(2)
             val transform: (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
-            val listItems = items.map {transform(it)}
-            val adapter = ItemListAdapter(listItems)
+            val listItems = listItems.map {transform(it)}
+            val adapter = ItemListAdapter(listItems){
+                gotoUpdateItem(it)
+            }
             binding.rvItems.adapter = adapter
         }else{
             switchItemListViewState(3)
