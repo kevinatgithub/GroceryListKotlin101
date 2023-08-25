@@ -38,6 +38,7 @@ class UpdateItemActivity : AppCompatActivity() {
 
     companion object{
         val ITEM_ID : String = "ITEM_ID"
+        val ALT_ITEM_ID : String = "ALT_ITEM_ID"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
