@@ -13,7 +13,7 @@ import com.kotlin101.group2.grocerylist.R
 import com.kotlin101.group2.grocerylist.data.api.models.Item
 import com.squareup.picasso.Picasso
 
-class ItemListAdapter(private val items: List<Item>, private val callback: (id:Int) -> Unit) : RecyclerView.Adapter<ItemViewHolder>() {
+open class ItemListAdapter(private val items: List<Item>, private val callback: (id:Int) -> Unit) : RecyclerView.Adapter<ItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_card, parent, false)

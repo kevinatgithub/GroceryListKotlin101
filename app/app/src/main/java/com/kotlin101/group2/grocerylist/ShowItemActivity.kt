@@ -2,10 +2,12 @@ package com.kotlin101.group2.grocerylist
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kotlin101.group2.grocerylist.adapters.AlternativeItemListAdapter
 import com.kotlin101.group2.grocerylist.adapters.ItemListAdapter
 import com.kotlin101.group2.grocerylist.data.api.GroceryApi
 import com.kotlin101.group2.grocerylist.data.api.GroceryApiBuilder
@@ -42,9 +44,9 @@ class ShowItemActivity : AppCompatActivity() {
         val itemId = intent.getIntExtra(ITEM_ID, 0)
         item = db.all(pref.getUser().cartId, "id == $itemId")[0]
 
-        val items = db.all(pref.getUser().cartId)
+        val items = db.all(pref.getUser().cartId, "alternativeItemId == $itemId and id != $itemId")
         val trans : (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
-        val adapter = ItemListAdapter(items.map { trans(it) }){
+        val adapter = AlternativeItemListAdapter(items.map { trans(it) }){
             showAlternative(it)
         }
         with(binding){
@@ -55,8 +57,13 @@ class ShowItemActivity : AppCompatActivity() {
                     finish()
                 }
             }
-            rvAlternatives.layoutManager = LinearLayoutManager(this@ShowItemActivity)
+
+            rvAlternatives.layoutManager = LinearLayoutManager(this@ShowItemActivity, LinearLayoutManager.HORIZONTAL, false)
             rvAlternatives.adapter = adapter
+
+            btnAddAlternative.setOnClickListener {
+                startAddAlternative()
+            }
 
             if (!item.imgUrl!!.isEmpty()){
                 Picasso.get().load(item.imgUrl).into(ivItemImage)
@@ -89,9 +96,7 @@ class ShowItemActivity : AppCompatActivity() {
 
                 }
             }
-            btnAlternative.setOnClickListener {
 
-            }
             btnDelete.setOnClickListener {
                 confirmAction("Remove Item","Are you sure you want to remove the item from the list?",{
                     markAs(ITEM_ACTION.REMOVE)
@@ -102,7 +107,16 @@ class ShowItemActivity : AppCompatActivity() {
             btnUpdate.setOnClickListener {
                 markAs(ITEM_ACTION.UPDATE)
             }
+            btnAddAlternative.setOnClickListener {
+                val i = Intent(this@ShowItemActivity, UpdateItemActivity::class.java)
+                i.putExtra(UpdateItemActivity.ALT_ITEM_ID, item.id)
+                startActivity(i)
+            }
         }
+    }
+
+    private fun startAddAlternative() {
+        TODO("Not yet implemented")
     }
 
     private enum class ITEM_ACTION{
@@ -144,8 +158,9 @@ class ShowItemActivity : AppCompatActivity() {
                     }
                 }
                 ITEM_ACTION.REMOVE -> {
+                    val apiItem = GroceryDb.dbToApi(item)
                     api.deleteItem(item.id,token!!)
-                    db.delete(item)
+                    db.delete(GroceryDb.apiToDb(apiItem))
                     withContext(Dispatchers.Main){
                         Toast.makeText(this@ShowItemActivity,"Item has been removed from the list!",Toast.LENGTH_LONG).show()
                         startActivity(Intent(this@ShowItemActivity, MainActivity::class.java))
