@@ -62,7 +62,8 @@
         app:layout_constraintStart_toStartOf="@id/glStart"
         app:layout_constraintEnd_toEndOf="@id/glEnd"
         app:layout_constraintBottom_toBottomOf="@id/glBottom"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:visibility="gone"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_add_contact"

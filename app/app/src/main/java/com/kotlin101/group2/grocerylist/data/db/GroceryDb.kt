@@ -52,7 +52,7 @@ class GroceryDb(context: Context) {
     }
 
     init {
-        val config = RealmConfiguration.create(schema = setOf(LocalItem::class))
+        val config = RealmConfiguration.create(schema = setOf(LocalItem::class, PendingItemUpdate::class))
         realm = Realm.open(config)
     }
 
@@ -89,23 +89,6 @@ class GroceryDb(context: Context) {
                     totalPrice = item.totalPrice
                 }
             }
-
-            /*findLatest(all(item.cartId,"id == "+item.id)[0]).apply {
-                if (this != null){
-                    alternativeItemId = item.alternativeItemId
-                    cartId = item.cartId
-                    description = item.description
-                    id = item.id
-                    img = item.img
-                    imgUrl = item.imgUrl
-                    isPrimary = item.isPrimary
-                    name = item.name
-                    pricePerUnit = item.pricePerUnit
-                    quantity = item.quantity
-                    status = item.status
-                    totalPrice = item.totalPrice
-                }
-            }*/
         }
     }
 
@@ -119,6 +102,22 @@ class GroceryDb(context: Context) {
     fun clearCart(cartId: Int){
         realm.writeBlocking {
             delete(query(LocalItem::class,"cartId == $cartId"))
+        }
+    }
+
+    fun allPending(): RealmResults<PendingItemUpdate>{
+        return realm.query(PendingItemUpdate::class).find()
+    }
+
+    fun upsertPending(item: PendingItemUpdate){
+        realm.writeBlocking {
+            copyToRealm(item)
+        }
+    }
+
+    fun deletePending(id:Int){
+        realm.writeBlocking {
+            delete(query(PendingItemUpdate::class,"itemId = $id").find())
         }
     }
 }

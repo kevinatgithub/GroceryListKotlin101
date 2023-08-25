@@ -22,6 +22,12 @@ class SelectAvatarActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         with(binding){
+            with(layoutHeader){
+                tvTitle.text = "Select Profile Avatar"
+                ivBack.setOnClickListener {
+                    finish()
+                }
+            }
             rvAvatars.layoutManager = GridLayoutManager(this@SelectAvatarActivity,2)
             GlobalScope.launch {
                 val images = GroceryAppHelpers.getRelatedImagesUrlFromWeb("cartoon avatars", 400)

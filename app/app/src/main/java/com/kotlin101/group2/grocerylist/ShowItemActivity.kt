@@ -14,6 +14,7 @@ import com.kotlin101.group2.grocerylist.data.api.GroceryApiBuilder
 import com.kotlin101.group2.grocerylist.data.api.models.Item
 import com.kotlin101.group2.grocerylist.data.db.GroceryDb
 import com.kotlin101.group2.grocerylist.data.db.LocalItem
+import com.kotlin101.group2.grocerylist.data.db.PendingItemUpdate
 import com.kotlin101.group2.grocerylist.data.sharedpreference.GroceryAppSharedPreference
 import com.kotlin101.group2.grocerylist.databinding.ActivityShowItemBinding
 import com.squareup.picasso.Picasso
@@ -98,19 +99,31 @@ class ShowItemActivity : AppCompatActivity() {
             }
 
             btnDelete.setOnClickListener {
-                confirmAction("Remove Item","Are you sure you want to remove the item from the list?",{
-                    markAs(ITEM_ACTION.REMOVE)
-                }){
+                if (!GroceryAppHelpers.checkForInternet(this@ShowItemActivity)){
+                    Toast.makeText(this@ShowItemActivity, "Can't remove item while offline.", Toast.LENGTH_LONG).show()
+                }else{
+                    confirmAction("Remove Item","Are you sure you want to remove the item from the list?",{
+                        markAs(ITEM_ACTION.REMOVE)
+                    }){
 
+                    }
                 }
             }
             btnUpdate.setOnClickListener {
-                markAs(ITEM_ACTION.UPDATE)
+                if (!GroceryAppHelpers.checkForInternet(this@ShowItemActivity)){
+                    Toast.makeText(this@ShowItemActivity, "Can't update item while offline.", Toast.LENGTH_LONG).show()
+                }else{
+                    markAs(ITEM_ACTION.UPDATE)
+                }
             }
             btnAddAlternative.setOnClickListener {
-                val i = Intent(this@ShowItemActivity, UpdateItemActivity::class.java)
-                i.putExtra(UpdateItemActivity.ALT_ITEM_ID, item.id)
-                startActivity(i)
+                if (!GroceryAppHelpers.checkForInternet(this@ShowItemActivity)){
+                    Toast.makeText(this@ShowItemActivity, "Can't add alternative item while offline.", Toast.LENGTH_LONG).show()
+                }else{
+                    val i = Intent(this@ShowItemActivity, UpdateItemActivity::class.java)
+                    i.putExtra(UpdateItemActivity.ALT_ITEM_ID, item.id)
+                    startActivity(i)
+                }
             }
         }
     }
@@ -128,7 +141,14 @@ class ShowItemActivity : AppCompatActivity() {
         GlobalScope.launch {
             when (action) {
                 ITEM_ACTION.DONE -> {
-                    api.markItemAsDone(item.id,token!!)
+                    if (!GroceryAppHelpers.checkForInternet(this@ShowItemActivity)){
+                        db.upsertPending(PendingItemUpdate().apply {
+                            itemId = item.id
+                            status = 2
+                        })
+                    }else{
+                        api.markItemAsDone(item.id,token!!)
+                    }
                     val apiItem = GroceryDb.dbToApi(item)
                     apiItem.status = 2
                     db.update(GroceryDb.apiToDb(apiItem))
@@ -139,7 +159,14 @@ class ShowItemActivity : AppCompatActivity() {
                     }
                 }
                 ITEM_ACTION.NOT_AVAILABLE -> {
-                    api.markItemAsNotAvailable(item.id,token!!)
+                    if (!GroceryAppHelpers.checkForInternet(this@ShowItemActivity)){
+                        db.upsertPending(PendingItemUpdate().apply {
+                            itemId = item.id
+                            status = 3
+                        })
+                    }else{
+                        api.markItemAsNotAvailable(item.id,token!!)
+                    }
                     val apiItem = GroceryDb.dbToApi(item)
                     apiItem.status = 3
                     db.update(GroceryDb.apiToDb(apiItem))
