@@ -77,39 +77,6 @@ object GroceryAppHelpers {
         }
     }
 
-    fun syncApiWithDB(activity: Activity){
-        val api = GroceryApiBuilder.getInstance()
-        val db = GroceryDb(activity)
-        val pref = GroceryAppSharedPreference.getInstance(activity)
-        val user = pref.getUser()
-        val token = pref.getToken()
-        val transform: (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
-
-        val lItems = db.all(user.cartId)
-        GlobalScope.launch {
-            api.syncCart(SyncRequest(lItems.map { transform(it) }),token!!)
-        }
-    }
-
-    fun syncDbWithAPI(activity: Activity){
-        val api = GroceryApiBuilder.getInstance()
-        val db = GroceryDb(activity)
-        val pref = GroceryAppSharedPreference.getInstance(activity)
-        val user = pref.getUser()
-        val token = pref.getToken()
-
-        GlobalScope.launch {
-            val items = api.getCartItems(token!!)
-            db.clearCart(user.cartId)
-            withContext(Dispatchers.Main){
-                items.forEach {
-                    val item = GroceryDb.apiToDb(it)
-                    db.add(item)
-                }
-            }
-        }
-    }
-
     fun applyText(txt: Any, default:String = "-") : String{
         if (txt.toString().isEmpty()){
             return default

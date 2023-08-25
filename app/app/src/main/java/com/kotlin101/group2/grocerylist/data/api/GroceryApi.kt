@@ -29,7 +29,7 @@ interface GroceryApi {
     suspend fun updateProfile(@Body updateProfile: UpdateProfileRequest, @Header("Authorization") auth: String)
 
     @GET("cart/items")
-    suspend fun getCartItems(@Header("Authorization") auth: String) : ArrayList<Item>;
+    suspend fun getCartItems(@Header("Authorization") auth: String) : Response<ArrayList<Item>>;
 
     @POST("cart/sync")
     suspend fun syncCart(@Body syncRequest : SyncRequest, @Header("Authorization") auth: String)

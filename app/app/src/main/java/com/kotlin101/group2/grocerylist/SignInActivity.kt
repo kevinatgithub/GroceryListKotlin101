@@ -34,6 +34,7 @@ class SignInActivity : AppCompatActivity() {
         if (pref.getToken() != null){
             startActivity(Intent(this, MainActivity::class.java))
             finish()
+            return
         }
 
         with(binding) {

@@ -50,7 +50,7 @@ class ContactsActivity: AppCompatActivity() {
                     binding.tvNoContacts.visibility = View.VISIBLE
                 }else{
                     binding.tvNoContacts.visibility = View.GONE
-                    val adapter = ContactListAdapter(users)
+                    val adapter = ContactListAdapter(this@ContactsActivity,users)
                     binding.rvContacts.adapter = adapter
                 }
             }

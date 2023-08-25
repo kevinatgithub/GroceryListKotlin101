@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kotlin101.group2.grocerylist.adapters.ItemListAdapter
@@ -12,9 +13,14 @@ import com.kotlin101.group2.grocerylist.data.api.GroceryApiBuilder
 import com.kotlin101.group2.grocerylist.data.api.models.Item
 import com.kotlin101.group2.grocerylist.data.db.GroceryDb
 import com.kotlin101.group2.grocerylist.data.db.LocalItem
+import com.kotlin101.group2.grocerylist.data.db.PendingItemUpdateHandler
 import com.kotlin101.group2.grocerylist.data.sharedpreference.GroceryAppSharedPreference
 import com.kotlin101.group2.grocerylist.databinding.ActivityMainBinding
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -51,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
             tvHelperText.visibility = View.GONE
             pbLoading.visibility = View.VISIBLE
+            srlRefresh.visibility = View.GONE
             rvItems.visibility = View.GONE
             rvItems.layoutManager = LinearLayoutManager(this@MainActivity)
 
@@ -64,16 +71,34 @@ class MainActivity : AppCompatActivity() {
             }
 
             fabAddItem.setOnClickListener {
-                startActivity(Intent(this@MainActivity, UpdateItemActivity::class.java))
-                finish()
+                if (!GroceryAppHelpers.checkForInternet(this@MainActivity)){
+                    Toast.makeText(this@MainActivity, "Can't connect to the internet, unable to add new items to list while offline.", Toast.LENGTH_LONG).show()
+                }else{
+                    startActivity(Intent(this@MainActivity, UpdateItemActivity::class.java))
+                    finish()
+                }
             }
 
             etSearch.addTextChangedListener {
                 performSearch()
             }
+
+            srlRefresh.setOnRefreshListener {
+                srlRefresh.isRefreshing = false
+                processPending()
+                loadItemsList()
+            }
         }
 
+        processPending()
         loadItemsList()
+    }
+
+    private fun processPending() {
+        if (GroceryAppHelpers.checkForInternet(this@MainActivity)) {
+            val pending = PendingItemUpdateHandler(this)
+            pending.processPending()
+        }
     }
 
     private fun performSearch() {
@@ -98,19 +123,39 @@ class MainActivity : AppCompatActivity() {
     private fun loadItemsList() {
         switchItemListViewState(1)
 
-        listItems = db.all(pref.getUser().cartId).sortedBy {
-            it.name
+        if (GroceryAppHelpers.checkForInternet(this)){
+            GlobalScope.launch {
+                val itemsRequest = api.getCartItems(pref.getToken().toString())
+                if (itemsRequest.isSuccessful){
+                    val items = itemsRequest.body()
+                    val transform: (Item) -> LocalItem = {GroceryDb.apiToDb(it)}
+                    listItems = items!!.map { transform(it) }
+                    db.clearCart(pref.getUser().cartId)
+                    listItems.forEach { db.add(it) }
+                    withContext(Dispatchers.Main){
+                        loadItemsToTheList()
+                    }
+                }
+            }
+        }else{
+            Toast.makeText(this,"Can't connect to the internet, showing offline items.",Toast.LENGTH_LONG).show()
+            listItems = db.all(pref.getUser().cartId).sortedBy {
+                it.name
+            }
+            loadItemsToTheList()
         }
+    }
 
-        if (listItems.size > 0){
+    private fun loadItemsToTheList() {
+        if (listItems.size > 0) {
             switchItemListViewState(2)
-            val transform: (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
-            val listItems = listItems.map {transform(it)}
-            val adapter = ItemListAdapter(listItems){
+            val transform: (LocalItem) -> Item = { GroceryDb.dbToApi(it) }
+            val listItems = listItems.map { transform(it) }
+            val adapter = ItemListAdapter(listItems) {
                 gotoShowItem(it)
             }
             binding.rvItems.adapter = adapter
-        }else{
+        } else {
             switchItemListViewState(3)
         }
     }
@@ -119,16 +164,19 @@ class MainActivity : AppCompatActivity() {
         with (binding){
             when(state){
                 1->{
+                    srlRefresh.visibility = View.GONE
                     rvItems.visibility = View.GONE
                     pbLoading.visibility = View.VISIBLE
                     tvHelperText.visibility = View.GONE
                 }
                 2->{
+                    srlRefresh.visibility = View.VISIBLE
                     rvItems.visibility = View.VISIBLE
                     pbLoading.visibility = View.GONE
                     tvHelperText.visibility = View.GONE
                 }
                 3->{
+                    srlRefresh.visibility = View.GONE
                     rvItems.visibility = View.GONE
                     pbLoading.visibility = View.GONE
                     tvHelperText.visibility = View.VISIBLE
