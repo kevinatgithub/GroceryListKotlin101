@@ -139,7 +139,8 @@
         app:layout_constraintEnd_toEndOf="@id/glEnd"
         app:layout_constraintStart_toStartOf="@id/glStart"
         app:layout_constraintTop_toBottomOf="@+id/etPassword"
-        app:layout_constraintBottom_toTopOf="@id/tvSignUpPrompt"/>
+        app:layout_constraintBottom_toTopOf="@id/tvSignUpPrompt"
+        android:enabled="true"/>
 
     <TextView
         android:id="@+id/tvSignUpPrompt"
@@ -167,5 +168,19 @@
         app:layout_constraintEnd_toEndOf="@id/glEnd"
         app:layout_constraintStart_toEndOf="@+id/tvSignUpPrompt"
         app:layout_constraintTop_toTopOf="@+id/tvSignUpPrompt" />
+
+
+    <ProgressBar
+        app:layout_constraintBottom_toBottomOf="@id/glBottom"
+        app:layout_constraintTop_toBottomOf="@id/glTop"
+        app:layout_constraintStart_toStartOf="@id/glStart"
+        app:layout_constraintEnd_toEndOf="@id/glEnd"
+        android:id="@+id/pb_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="376dp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
