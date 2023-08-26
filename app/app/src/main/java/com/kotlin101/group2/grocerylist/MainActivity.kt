@@ -123,6 +123,8 @@ class MainActivity : AppCompatActivity() {
     private fun loadItemsList() {
         switchItemListViewState(1)
 
+        binding.srlRefresh.isRefreshing = true
+
         if (GroceryAppHelpers.checkForInternet(this)){
             GlobalScope.launch {
                 val itemsRequest = api.getCartItems(pref.getToken().toString())
@@ -164,19 +166,22 @@ class MainActivity : AppCompatActivity() {
         with (binding){
             when(state){
                 1->{
-                    srlRefresh.visibility = View.GONE
+                    srlRefresh.visibility = View.VISIBLE
+                    srlRefresh.isRefreshing = true
                     rvItems.visibility = View.GONE
-                    pbLoading.visibility = View.VISIBLE
+                    pbLoading.visibility = View.GONE
                     tvHelperText.visibility = View.GONE
                 }
                 2->{
                     srlRefresh.visibility = View.VISIBLE
                     rvItems.visibility = View.VISIBLE
+                    srlRefresh.isRefreshing = false
                     pbLoading.visibility = View.GONE
                     tvHelperText.visibility = View.GONE
                 }
                 3->{
                     srlRefresh.visibility = View.GONE
+                    srlRefresh.isRefreshing = false
                     rvItems.visibility = View.GONE
                     pbLoading.visibility = View.GONE
                     tvHelperText.visibility = View.VISIBLE

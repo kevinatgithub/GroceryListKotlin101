@@ -2,6 +2,7 @@ package com.kotlin101.group2.grocerylist
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -57,6 +58,8 @@ class SignInActivity : AppCompatActivity() {
 
     private fun startSignInValidation() {
         with(binding){
+            pbLoading.visibility = View.VISIBLE
+            btnSignIn.isEnabled = false
             var errors: Int  = 0
             if (etEmail.text!!.isEmpty()){
                 errors++
@@ -103,6 +106,10 @@ class SignInActivity : AppCompatActivity() {
                         Toast.makeText(this@SignInActivity, errorResponse.text,Toast.LENGTH_LONG).show()
                         btnSignIn.isEnabled = true
                     }
+                }
+                withContext(Dispatchers.Main){
+                    pbLoading.visibility = View.GONE
+                    btnSignIn.isEnabled = true
                 }
             }
         }
