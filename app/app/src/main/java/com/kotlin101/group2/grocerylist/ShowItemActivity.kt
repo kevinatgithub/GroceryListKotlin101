@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 
 class ShowItemActivity : AppCompatActivity() {
     private lateinit var binding : ActivityShowItemBinding
@@ -48,8 +49,11 @@ class ShowItemActivity : AppCompatActivity() {
         val items = db.all(pref.getUser().cartId, "alternativeItemId == $itemId and id != $itemId")
         val trans : (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
         val adapter = AlternativeItemListAdapter(items.map { trans(it) }){
-            showAlternative(it)
+            GlobalScope.launch {
+                showAlternative(it)
+            }
         }
+
         with(binding){
             with(pageHeader){
                 tvPageTitle.text = "Show Item"
@@ -61,10 +65,6 @@ class ShowItemActivity : AppCompatActivity() {
 
             rvAlternatives.layoutManager = LinearLayoutManager(this@ShowItemActivity, LinearLayoutManager.HORIZONTAL, false)
             rvAlternatives.adapter = adapter
-
-            btnAddAlternative.setOnClickListener {
-                startAddAlternative()
-            }
 
             if (!item.imgUrl!!.isEmpty()){
                 Picasso.get().load(item.imgUrl).into(ivItemImage)
@@ -199,8 +199,8 @@ class ShowItemActivity : AppCompatActivity() {
 
     }
 
-    private fun showAlternative(itemId: Int) {
-
+    private suspend fun showAlternative(itemId: Int): Response<ArrayList<Item>> {
+        return api.getItemAlternatives(itemId = itemId, auth = pref.getToken().toString())
     }
 
     private fun confirmAction(_title:String,_msg:String, positive:() -> Unit, negative:() -> Unit){

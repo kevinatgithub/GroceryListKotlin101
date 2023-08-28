@@ -35,6 +35,7 @@ class UpdateItemActivity : AppCompatActivity() {
     private lateinit var pref : GroceryAppSharedPreference
     private var item : LocalItem? = null
     private var imgUrl : String? = null
+    private var altItemId: Int = 0
 
     companion object{
         val ITEM_ID : String = "ITEM_ID"
@@ -120,13 +121,13 @@ class UpdateItemActivity : AppCompatActivity() {
                 }
                 var photoUrl = ""
                 if (imgUrl != null && !imgUrl!!.isEmpty()){
-                    photoUrl = imgUrl!!
+                    photoUrl = imgUrl ?: ""
                 }else{
-                    photoUrl = item?.imgUrl!!
+                    photoUrl = item?.imgUrl ?: ""
                 }
                 GlobalScope.launch {
                     if (item != null){
-                        val updateItemRequest = api.updateItem(item!!.id, UpdateItemRequest(etItemDetails.text.toString(), "", photoUrl!!, etItemName.text.toString(), pricePerUnit, quantity), pref.getToken().toString())
+                        val updateItemRequest = api.updateItem(item!!.id, UpdateItemRequest(etItemDetails.text.toString(), "", photoUrl, etItemName.text.toString(), pricePerUnit, quantity), pref.getToken().toString())
                         if (updateItemRequest.isSuccessful){
                             val apiItem = updateItemRequest.body()
                             db.update(GroceryDb.apiToDb(apiItem!!))
@@ -144,7 +145,7 @@ class UpdateItemActivity : AppCompatActivity() {
                         }
                         lItem.pricePerUnit = pricePerUnit
                         lItem.quantity = quantity
-                        val addItemRequest = api.addItem(CreateItemRequest(0,lItem.description,"",photoUrl!!,lItem.name,lItem.pricePerUnit,lItem.quantity),pref.getToken().toString())
+                        val addItemRequest = api.addItem(CreateItemRequest(if (altItemId > 0) altItemId else 0,lItem.description,"",photoUrl,lItem.name,lItem.pricePerUnit,lItem.quantity),pref.getToken().toString())
                         if (addItemRequest.isSuccessful){
                             val newItem = addItemRequest.body()
                             db.add(GroceryDb.apiToDb(newItem!!))
@@ -167,6 +168,7 @@ class UpdateItemActivity : AppCompatActivity() {
 
     private fun loadItemFromExtra() {
         val itemId = intent.extras?.getInt(ITEM_ID, 0)
+        altItemId = intent.extras?.getInt(ALT_ITEM_ID, 0)!!
         if (itemId != 0) {
             val items = db.all(pref.getUser().cartId,"id == $itemId")
             if (items.size > 0) {
