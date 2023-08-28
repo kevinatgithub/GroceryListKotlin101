@@ -128,10 +128,6 @@ class ShowItemActivity : AppCompatActivity() {
         }
     }
 
-    private fun startAddAlternative() {
-        TODO("Not yet implemented")
-    }
-
     private enum class ITEM_ACTION{
         DONE,NOT_AVAILABLE,REMOVE,UPDATE
     }
@@ -200,7 +196,8 @@ class ShowItemActivity : AppCompatActivity() {
     }
 
     private suspend fun showAlternative(itemId: Int): Response<ArrayList<Item>> {
-        return api.getItemAlternatives(itemId = itemId, auth = pref.getToken().toString())
+        val result = api.getItemAlternatives(itemId = itemId, auth = pref.getToken().toString())
+        return result
     }
 
     private fun confirmAction(_title:String,_msg:String, positive:() -> Unit, negative:() -> Unit){

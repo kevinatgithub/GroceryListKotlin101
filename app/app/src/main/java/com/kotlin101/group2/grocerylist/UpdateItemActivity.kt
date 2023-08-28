@@ -145,6 +145,7 @@ class UpdateItemActivity : AppCompatActivity() {
                         }
                         lItem.pricePerUnit = pricePerUnit
                         lItem.quantity = quantity
+                        // If alternative item id is greater than zero it will be added as alternative item
                         val addItemRequest = api.addItem(CreateItemRequest(if (altItemId > 0) altItemId else 0,lItem.description,"",photoUrl,lItem.name,lItem.pricePerUnit,lItem.quantity),pref.getToken().toString())
                         if (addItemRequest.isSuccessful){
                             val newItem = addItemRequest.body()
