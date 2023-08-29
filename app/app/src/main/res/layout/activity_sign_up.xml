@@ -167,7 +167,7 @@
         android:textSize="19sp"
         app:layout_constraintEnd_toEndOf="@id/glEnd"
         app:layout_constraintStart_toStartOf="@id/glStart"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword"
+        app:layout_constraintTop_toBottomOf="@+id/pb_loading"
         app:layout_constraintBottom_toTopOf="@id/tvSignUpPrompt"/>
 
 
@@ -178,8 +178,9 @@
         app:layout_constraintEnd_toEndOf="@id/glEnd"
         app:layout_constraintStart_toStartOf="@id/glStart"
         app:layout_constraintTop_toBottomOf="@+id/etPassword"
-        app:layout_constraintBottom_toTopOf="@id/tvSignUpPrompt"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_marginTop="40dp"
+        tools:visibility="visible"/>
 
     <TextView
         android:id="@+id/tvSignUpPrompt"

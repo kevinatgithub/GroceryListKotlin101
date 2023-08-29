@@ -45,7 +45,7 @@ open class AlternativeItemListAdapter(private val items: List<Item>, private val
                     item.pricePerUnit
                 )
             } per unit x ${GroceryAppHelpers.applyText(item.quantity)} pcs"
-            ivStatus.visibility = View.VISIBLE
+            ivStatus.visibility = View.GONE
             val p = Picasso.get()
             when(item.status){
                 2->{

@@ -123,6 +123,7 @@ class SignUpActivity: AppCompatActivity() {
 
                             withContext(Dispatchers.Main) {
                                 gotoUpdateProfile()
+                                changePageState(isLoading = false)
                             }
                         }
                     }
@@ -131,6 +132,7 @@ class SignUpActivity: AppCompatActivity() {
                     withContext(Dispatchers.Main){
                         Toast.makeText(this@SignUpActivity, errorResponse.text,Toast.LENGTH_LONG).show()
                         btnSignUp.isEnabled = true
+                        changePageState(isLoading = false)
                     }
                 }
                 withContext(Dispatchers.Main){

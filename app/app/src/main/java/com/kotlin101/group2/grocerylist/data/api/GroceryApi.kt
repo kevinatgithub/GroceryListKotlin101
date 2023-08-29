@@ -26,7 +26,7 @@ interface GroceryApi {
     suspend fun getCurrentUserInfo(@Header("Authorization") auth: String) : Response<UserResponse>;
 
     @PUT("user")
-    suspend fun updateProfile(@Body updateProfile: UpdateProfileRequest, @Header("Authorization") auth: String)
+    suspend fun updateProfile(@Body updateProfile: UpdateProfileRequest, @Header("Authorization") auth: String) : Response<Any>
 
     @GET("cart/items")
     suspend fun getCartItems(@Header("Authorization") auth: String) : Response<ArrayList<Item>>;
