@@ -57,7 +57,7 @@ public class UserController : ControllerBase
             if ((await _userManager.ConfirmEmailAsync(user, code)).Succeeded)
             {
                 var userCart = await _cartService.CreateNewCartForUserAsync(user.Email);
-                await _userService.Create(user.Email, register.Name, userCart.CartId,"");
+                await _userService.Create(user.Email, register.Name, userCart.CartId,register.Avatar);
                 return Ok(new TextResponse("SUCCESS"));
             }
             else
