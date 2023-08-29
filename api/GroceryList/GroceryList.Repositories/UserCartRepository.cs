@@ -13,7 +13,7 @@ public class UserCartRepository : IUserCartRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<UserCart> CreateUserCartAsync(int cartId, string email, string createdBy)
+    public async Task<UserCart> CreateUserCartAsync(int cartId, string email, string createdBy, string? avatar)
     {
         UserCart userCart = new UserCart
         {

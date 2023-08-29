@@ -57,7 +57,7 @@ public class UserController : ControllerBase
             if ((await _userManager.ConfirmEmailAsync(user, code)).Succeeded)
             {
                 var userCart = await _cartService.CreateNewCartForUserAsync(user.Email);
-                await _userService.Create(user.Email, register.Name, userCart.CartId);
+                await _userService.Create(user.Email, register.Name, userCart.CartId,"");
                 return Ok(new TextResponse("SUCCESS"));
             }
             else
@@ -113,8 +113,8 @@ public class UserController : ControllerBase
 
             if ((await _userManager.ConfirmEmailAsync(user, code)).Succeeded)
             {
-                await _cartService.AddUserToCartAsync(model.CartId, model.Email, user.Email);
-                await _userService.Create(user.Email, model.Name, model.CartId);
+                await _cartService.AddUserToCartAsync(model.CartId, model.Email, user.Email, model.Avatar);
+                await _userService.Create(user.Email, model.Name, model.CartId, model.Avatar);
                 return Ok(new TextResponse("SUCCESS"));
             }
             else

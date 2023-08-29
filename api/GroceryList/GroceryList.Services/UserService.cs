@@ -13,9 +13,9 @@ public class UserService : IUserService
         this.repository = repository;
     }
 
-    public async Task<User> Create(string email, string name, int cartId)
+    public async Task<User> Create(string email, string name, int cartId, string? avatar)
     {
-        return await repository.Create(email, name, cartId);
+        return await repository.Create(email, name, cartId, avatar);
     }
 
     public async Task<User?> Get(string email)
