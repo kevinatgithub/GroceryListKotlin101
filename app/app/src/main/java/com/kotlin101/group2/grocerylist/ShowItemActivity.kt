@@ -30,6 +30,7 @@ class ShowItemActivity : AppCompatActivity() {
     private lateinit var db : GroceryDb
     private lateinit var pref : GroceryAppSharedPreference
     private lateinit var item : LocalItem
+    private var items : List<LocalItem> = ArrayList<LocalItem>()
 
     companion object{
         val ITEM_ID : String = "ITEM_ID"
@@ -42,17 +43,14 @@ class ShowItemActivity : AppCompatActivity() {
         api = GroceryApiBuilder.getInstance()
         db = GroceryDb(this)
         pref = GroceryAppSharedPreference.getInstance(this)
+        binding.rvAlternatives.layoutManager = LinearLayoutManager(this@ShowItemActivity, LinearLayoutManager.HORIZONTAL, false)
 
         val itemId = intent.getIntExtra(ITEM_ID, 0)
         item = db.all(pref.getUser().cartId, "id == $itemId")[0]
 
-        val items = db.all(pref.getUser().cartId, "alternativeItemId == $itemId and id != $itemId")
-        val trans : (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
-        val adapter = AlternativeItemListAdapter(items.map { trans(it) }){
-            GlobalScope.launch {
-                showAlternative(it)
-            }
-        }
+        updateList()
+
+        showCurrentItem()
 
         with(binding){
             with(pageHeader){
@@ -63,9 +61,12 @@ class ShowItemActivity : AppCompatActivity() {
                 }
             }
 
-            rvAlternatives.layoutManager = LinearLayoutManager(this@ShowItemActivity, LinearLayoutManager.HORIZONTAL, false)
-            rvAlternatives.adapter = adapter
 
+        }
+    }
+
+    private fun showCurrentItem() {
+        with(binding){
             if (!item.imgUrl!!.isEmpty()){
                 Picasso.get().load(item.imgUrl).into(ivItemImage)
                 ivItemImage.setOnClickListener {
@@ -126,6 +127,16 @@ class ShowItemActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun updateList() {
+        val itemId = intent.getIntExtra(ITEM_ID, 0)
+        items = db.all(pref.getUser().cartId, "alternativeItemId == $itemId")
+        val trans: (LocalItem) -> Item = { GroceryDb.dbToApi(it) }
+        val adapter = AlternativeItemListAdapter(items.filter { it.id != item.id }.map { trans(it) }) {
+                showAlternative(it)
+            }
+        binding.rvAlternatives.adapter = adapter
     }
 
     private enum class ITEM_ACTION{
@@ -195,9 +206,13 @@ class ShowItemActivity : AppCompatActivity() {
 
     }
 
-    private suspend fun showAlternative(itemId: Int): Response<ArrayList<Item>> {
-        val result = api.getItemAlternatives(itemId = itemId, auth = pref.getToken().toString())
-        return result
+    private fun showAlternative(itemId: Int) {
+        val altItem = db.all(pref.getUser().cartId, "id == $itemId")
+        if (altItem.size > 0){
+            item = altItem[0]
+            showCurrentItem()
+            updateList()
+        }
     }
 
     private fun confirmAction(_title:String,_msg:String, positive:() -> Unit, negative:() -> Unit){

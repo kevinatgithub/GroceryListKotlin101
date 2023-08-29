@@ -59,7 +59,7 @@ open class ItemListAdapter(private val items: List<Item>, private val callback: 
     }
 }
 
-class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+open class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     val card: MaterialCardView = itemView.findViewById(R.id.card)
     val ivStatus: ImageView = itemView.findViewById(R.id.ivStatus)
     val ivImg: ImageView = itemView.findViewById(R.id.iv_item_image)
