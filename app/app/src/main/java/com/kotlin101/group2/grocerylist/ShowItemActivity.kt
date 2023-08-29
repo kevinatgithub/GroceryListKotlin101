@@ -145,6 +145,7 @@ class ShowItemActivity : AppCompatActivity() {
 
     private fun markAs(action:ITEM_ACTION) {
         val token = pref.getToken()
+        changePageState(true)
         GlobalScope.launch {
             when (action) {
                 ITEM_ACTION.DONE -> {
@@ -154,7 +155,13 @@ class ShowItemActivity : AppCompatActivity() {
                             status = 2
                         })
                     }else{
-                        api.markItemAsDone(item.id,token!!)
+                        val doneRequest = api.markItemAsDone(item.id,token!!)
+                        if (!doneRequest.isSuccessful){
+                            db.upsertPending(PendingItemUpdate().apply {
+                                itemId = item.id
+                                status = 2
+                            })
+                        }
                     }
                     val apiItem = GroceryDb.dbToApi(item)
                     apiItem.status = 2
@@ -162,6 +169,7 @@ class ShowItemActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main){
                         Toast.makeText(this@ShowItemActivity,"Item marked as done!",Toast.LENGTH_LONG).show()
                         startActivity(Intent(this@ShowItemActivity, MainActivity::class.java))
+                        changePageState(false)
                         finish()
                     }
                 }
@@ -172,7 +180,13 @@ class ShowItemActivity : AppCompatActivity() {
                             status = 3
                         })
                     }else{
-                        api.markItemAsNotAvailable(item.id,token!!)
+                        val naRequest = api.markItemAsNotAvailable(item.id,token!!)
+                        if (!naRequest.isSuccessful){
+                            db.upsertPending(PendingItemUpdate().apply {
+                                itemId = item.id
+                                status = 3
+                            })
+                        }
                     }
                     val apiItem = GroceryDb.dbToApi(item)
                     apiItem.status = 3
@@ -180,6 +194,7 @@ class ShowItemActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main){
                         Toast.makeText(this@ShowItemActivity,"Item marked as not available!",Toast.LENGTH_LONG).show()
                         startActivity(Intent(this@ShowItemActivity, MainActivity::class.java))
+                        changePageState(false)
                         finish()
                     }
                 }
@@ -188,17 +203,26 @@ class ShowItemActivity : AppCompatActivity() {
                         val i = Intent(this@ShowItemActivity, UpdateItemActivity::class.java)
                         i.putExtra(UpdateItemActivity.ITEM_ID, item.id)
                         startActivity(i)
+                        changePageState(false)
                         finish()
                     }
                 }
                 ITEM_ACTION.REMOVE -> {
                     val apiItem = GroceryDb.dbToApi(item)
-                    api.deleteItem(item.id,token!!)
-                    db.delete(GroceryDb.apiToDb(apiItem))
-                    withContext(Dispatchers.Main){
-                        Toast.makeText(this@ShowItemActivity,"Item has been removed from the list!",Toast.LENGTH_LONG).show()
-                        startActivity(Intent(this@ShowItemActivity, MainActivity::class.java))
-                        finish()
+                    val deleteRequest = api.deleteItem(item.id,token!!)
+                    if (deleteRequest.isSuccessful){
+                        db.delete(GroceryDb.apiToDb(apiItem))
+                        withContext(Dispatchers.Main){
+                            Toast.makeText(this@ShowItemActivity,"Item has been removed from the list!",Toast.LENGTH_LONG).show()
+                            startActivity(Intent(this@ShowItemActivity, MainActivity::class.java))
+                            changePageState(false)
+                            finish()
+                        }
+                    }else{
+                        withContext(Dispatchers.Main){
+                            Toast.makeText(this@ShowItemActivity,"Delete item failed!",Toast.LENGTH_LONG).show()
+                            changePageState(false)
+                        }
                     }
                 }
             }
@@ -230,5 +254,16 @@ class ShowItemActivity : AppCompatActivity() {
                 negative()
             }
         }.show()
+    }
+
+    private fun changePageState(isLoading: Boolean){
+        with(binding){
+            pageHeader.ivBack.isEnabled = !isLoading
+            btnUpdate.isEnabled = !isLoading
+            btnDelete.isEnabled = !isLoading
+            btnPositive.isEnabled = !isLoading
+            btnNegative.isEnabled = !isLoading
+            pbLoading.visibility = if (isLoading) View.VISIBLE else View.INVISIBLE
+        }
     }
 }

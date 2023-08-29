@@ -108,7 +108,7 @@ public class ItemsController : ControllerBase
         item1.IsPrimary = true;
         item1.AlternativeItemId = itemId;
         _itemService.UpdateItem(item1);
-        return Ok();
+        return Ok(new TextResponse("Primary"));
     }
 
     [HttpPost("{itemId}/done")]
@@ -131,7 +131,7 @@ public class ItemsController : ControllerBase
         item1.AlternativeItemId = itemId;
         _itemService.UpdateItem(item1);
         await _itemService.MarkItemAsAsync(itemId, (short)ItemStatus.DONE);
-        return Ok();
+        return Ok(new TextResponse("Done"));
     }
 
     [HttpPost("{itemId}/notavailable")]
@@ -154,7 +154,7 @@ public class ItemsController : ControllerBase
         item1.AlternativeItemId = itemId;
         _itemService.UpdateItem(item1);
         await _itemService.MarkItemAsAsync(itemId, (short)ItemStatus.NOT_AVAILABLE);
-        return Ok();
+        return Ok(new TextResponse("Not Available"));
     }
 
     [HttpDelete("{itemId}")]
@@ -165,6 +165,6 @@ public class ItemsController : ControllerBase
         {
             await _itemService.RemoveItemAsync(item);
         }
-        return Ok();
+        return Ok(new TextResponse("Deleted"));
     }
 }

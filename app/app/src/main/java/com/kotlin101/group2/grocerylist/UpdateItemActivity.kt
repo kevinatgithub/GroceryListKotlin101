@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -60,6 +61,7 @@ class UpdateItemActivity : AppCompatActivity() {
             }
 
             if (item != null){
+                layoutAddUpdateItem.tvTitle.text = "Update Item"
                 etItemName.setText(item!!.name)
                 etItemDetails.setText(item!!.description)
                 etItemPrice.setText(item!!.pricePerUnit.toString())
@@ -125,6 +127,7 @@ class UpdateItemActivity : AppCompatActivity() {
                 }else{
                     photoUrl = item?.imgUrl ?: ""
                 }
+                changePageState(true)
                 GlobalScope.launch {
                     if (item != null){
                         val updateItemRequest = api.updateItem(item!!.id, UpdateItemRequest(etItemDetails.text.toString(), "", photoUrl, etItemName.text.toString(), pricePerUnit, quantity), pref.getToken().toString())
@@ -134,7 +137,14 @@ class UpdateItemActivity : AppCompatActivity() {
                             withContext(Dispatchers.Main){
                                 Toast.makeText(this@UpdateItemActivity,"Item has been updated", Toast.LENGTH_SHORT).show()
                                 startActivity(Intent(this@UpdateItemActivity,MainActivity::class.java))
+                                changePageState(false)
                                 finish()
+                            }
+                        }else{
+                            val errorResponse = Gson().fromJson(updateItemRequest.errorBody()!!.charStream(), TextResponse::class.java)
+                            withContext(Dispatchers.Main){
+                                Toast.makeText(this@UpdateItemActivity, errorResponse.text,Toast.LENGTH_LONG).show()
+                                changePageState(false)
                             }
                         }
                     } else{
@@ -160,12 +170,14 @@ class UpdateItemActivity : AppCompatActivity() {
                                     intent = Intent(this@UpdateItemActivity,MainActivity::class.java)
                                 }
                                 startActivity(intent)
+                                changePageState(false)
                                 finish()
                             }
                         }else{
                             val errorResponse = Gson().fromJson(addItemRequest.errorBody()!!.charStream(), TextResponse::class.java)
                             withContext(Dispatchers.Main){
                                 Toast.makeText(this@UpdateItemActivity, errorResponse.text,Toast.LENGTH_LONG).show()
+                                changePageState(false)
                             }
                         }
                     }
@@ -194,6 +206,14 @@ class UpdateItemActivity : AppCompatActivity() {
                 imgUrl = url
                 Picasso.get().load(url).into(binding.photoBox)
             }
+        }
+    }
+
+    private fun changePageState(isLoading: Boolean){
+        with(binding){
+            layoutAddUpdateItem.ivBack.isEnabled = !isLoading
+            pbLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+            fabSave.isEnabled = !isLoading
         }
     }
 }
