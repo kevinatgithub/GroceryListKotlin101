@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kotlin101.group2.grocerylist.adapters.ItemListAdapter
@@ -27,10 +28,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var api: GroceryApi
     private lateinit var pref: GroceryAppSharedPreference
     private lateinit var db: GroceryDb
-    private lateinit var listItems: List<LocalItem>
+    private var listItems: List<LocalItem> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

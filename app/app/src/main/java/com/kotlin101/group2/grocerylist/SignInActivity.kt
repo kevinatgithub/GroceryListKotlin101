@@ -2,9 +2,12 @@ package com.kotlin101.group2.grocerylist
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.kotlin101.group2.grocerylist.data.api.GroceryApi
@@ -26,6 +29,8 @@ class SignInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

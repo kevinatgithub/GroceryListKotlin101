@@ -90,12 +90,18 @@ class SignUpActivity: AppCompatActivity() {
         with(binding){
             changePageState(isLoading = true)
             GlobalScope.launch {
-                var signUp = api.signUp(SignUpRequest(etEmail.text.toString(), etName.text.toString(), etPassword.text.toString()))
+                var signUp = api.signUp(SignUpRequest(etEmail.text.toString(), etName.text.toString(), etPassword.text.toString(), "https://static.vecteezy.com/system/resources/previews/021/548/095/original/default-profile-picture-avatar-user-avatar-icon-person-icon-head-icon-profile-picture-icons-default-anonymous-user-male-and-female-businessman-photo-placeholder-social-network-avatar-portrait-free-vector.jpg"))
                 withContext(Dispatchers.Main){
                     btnSignUp.isEnabled = false
                 }
-                if (signUp.isSuccessful){
+                if (signUp.isSuccessful) {
                     getSignInToken()
+                }else if (signUp.code() == 400){
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(this@SignUpActivity, "Bad Request",Toast.LENGTH_LONG).show()
+                        btnSignUp.isEnabled = true
+                    }
+                    changePageState(isLoading = false)
                 }else{
                     val errorResponse = Gson().fromJson(signUp.errorBody()!!.charStream(), TextResponse::class.java)
                     withContext(Dispatchers.Main){
