@@ -131,9 +131,10 @@ class MainActivity : AppCompatActivity() {
                 if (itemsRequest.isSuccessful){
                     val items = itemsRequest.body()
                     val transform: (Item) -> LocalItem = {GroceryDb.apiToDb(it)}
-                    listItems = items!!.map { transform(it) }
+                    val primeItems = items?.filter { it.isPrimary == true }
+                    listItems = primeItems!!.map { transform(it) }
                     db.clearCart(pref.getUser().cartId)
-                    listItems.forEach { db.add(it) }
+                    items?.map{ transform(it) }?.forEach { db.add(it) }
                     withContext(Dispatchers.Main){
                         loadItemsToTheList()
                     }
@@ -143,7 +144,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this,"Can't connect to the internet, showing offline items.",Toast.LENGTH_LONG).show()
             listItems = db.all(pref.getUser().cartId).sortedBy {
                 it.name
-            }
+            }.filter { it.isPrimary == true }
             loadItemsToTheList()
         }
     }
