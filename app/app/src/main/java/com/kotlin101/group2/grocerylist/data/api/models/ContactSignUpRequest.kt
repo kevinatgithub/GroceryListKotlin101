@@ -4,5 +4,6 @@ class ContactSignUpRequest(
     val cartId: Int,
     val email: String,
     val name: String,
-    val password: String
+    val password: String,
+    val avatar: String?
 )

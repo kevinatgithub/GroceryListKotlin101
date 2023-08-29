@@ -13,13 +13,14 @@ public class UserRepository : IUserRepository
         this.context = context;
     }
 
-    public async Task<User> Create(string email, string name, int cartId)
+    public async Task<User> Create(string email, string name, int cartId, string? avatar)
     {
         var user = new User
         {
             Email = email,
             Name = name,
-            CartId = cartId
+            CartId = cartId,
+            Avatar = avatar
         };
         await context.Users.AddAsync(user);
         context.SaveChanges();

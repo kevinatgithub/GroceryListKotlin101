@@ -37,15 +37,18 @@ class ContactsActivity: AppCompatActivity() {
             }
             fabAddContact.setOnClickListener {
                 startActivity(Intent(this@ContactsActivity, ContactSignUpActivity::class.java))
+                finish()
             }
         }
 
+        changePageState(true)
         GlobalScope.launch {
             var users = api.getCartUsers(pref.getToken().toString())
             users.remove(users.first {
                 it.email == pref.getUser().email
             })
             withContext(Dispatchers.Main){
+                changePageState(false)
                 if (users.size == 0){
                     binding.tvNoContacts.visibility = View.VISIBLE
                 }else{
@@ -54,6 +57,16 @@ class ContactsActivity: AppCompatActivity() {
                     binding.rvContacts.adapter = adapter
                 }
             }
+        }
+    }
+
+    private fun changePageState(isLoading : Boolean){
+        with(binding){
+            tvNoContacts.visibility = if (isLoading) View.GONE else View.VISIBLE
+            rvContacts.visibility = if (isLoading) View.GONE else View.VISIBLE
+            fabAddContact.isEnabled = !isLoading
+            layoutHeader.ivBack.isEnabled = !isLoading
+            pbLoading.visibility = if (!isLoading) View.GONE else View.VISIBLE
         }
     }
 }
