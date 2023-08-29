@@ -35,7 +35,7 @@ class UpdateItemActivity : AppCompatActivity() {
     private lateinit var pref : GroceryAppSharedPreference
     private var item : LocalItem? = null
     private var imgUrl : String? = null
-    private var altItemId: Int = 0
+    private var altItemId: Int? = null
 
     companion object{
         val ITEM_ID : String = "ITEM_ID"
@@ -146,13 +146,20 @@ class UpdateItemActivity : AppCompatActivity() {
                         lItem.pricePerUnit = pricePerUnit
                         lItem.quantity = quantity
                         // If alternative item id is greater than zero it will be added as alternative item
-                        val addItemRequest = api.addItem(CreateItemRequest(if (altItemId > 0) altItemId else 0,lItem.description,"",photoUrl,lItem.name,lItem.pricePerUnit,lItem.quantity),pref.getToken().toString())
+                        val addItemRequest = api.addItem(CreateItemRequest(if (altItemId != null) altItemId!! else 0,lItem.description,"",photoUrl,lItem.name,lItem.pricePerUnit,lItem.quantity),pref.getToken().toString())
                         if (addItemRequest.isSuccessful){
                             val newItem = addItemRequest.body()
                             db.add(GroceryDb.apiToDb(newItem!!))
                             withContext(Dispatchers.Main){
                                 Toast.makeText(this@UpdateItemActivity,"Item added to list", Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(this@UpdateItemActivity,MainActivity::class.java))
+                                var intent: Intent
+                                if (altItemId != null ){
+                                    intent = Intent(this@UpdateItemActivity, ShowItemActivity::class.java)
+                                    intent.putExtra(ShowItemActivity.ITEM_ID, altItemId)
+                                }else{
+                                    intent = Intent(this@UpdateItemActivity,MainActivity::class.java)
+                                }
+                                startActivity(intent)
                                 finish()
                             }
                         }else{
@@ -169,7 +176,7 @@ class UpdateItemActivity : AppCompatActivity() {
 
     private fun loadItemFromExtra() {
         val itemId = intent.extras?.getInt(ITEM_ID, 0)
-        altItemId = intent.extras?.getInt(ALT_ITEM_ID, 0)!!
+        altItemId = intent.extras?.getInt(ALT_ITEM_ID, 0)
         if (itemId != 0) {
             val items = db.all(pref.getUser().cartId,"id == $itemId")
             if (items.size > 0) {

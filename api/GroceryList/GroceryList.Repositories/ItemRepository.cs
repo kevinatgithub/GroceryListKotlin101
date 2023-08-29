@@ -22,7 +22,7 @@ public class ItemRepository : IItemRepository
 
     public async Task<ICollection<Item>> GetAllItemsFromCartAsync(int cartId)
     {
-        return await _context.Items.Where(i => i.CartId == cartId && i.IsPrimary == true).ToListAsync();
+        return await _context.Items.Where(i => i.CartId == cartId).ToListAsync();
     }
 
     public async Task<ICollection<Item>> GetAlternativeItems(int id)
