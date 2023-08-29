@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             it.name.contains(binding.etSearch.text.toString(),true)
         }
         val transform: (LocalItem) -> Item = {GroceryDb.dbToApi(it)}
-        val adapter = ItemListAdapter(items.map { transform(it) }){
+        val adapter = ItemListAdapter(this, items.map { transform(it) }){
             gotoShowItem(it)
         }
         binding.rvItems.adapter = adapter
@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
             switchItemListViewState(2)
             val transform: (LocalItem) -> Item = { GroceryDb.dbToApi(it) }
             val listItems = listItems.map { transform(it) }
-            val adapter = ItemListAdapter(listItems) {
+            val adapter = ItemListAdapter(this, listItems) {
                 gotoShowItem(it)
             }
             binding.rvItems.adapter = adapter

@@ -194,7 +194,7 @@
         android:layout_marginTop="20dp"
         android:background="@android:drawable/ic_menu_camera"
         app:layout_constraintStart_toStartOf="@id/glStart"
-        app:layout_constraintTop_toBottomOf="@id/tvItemFlavor" />
+        app:layout_constraintTop_toBottomOf="@id/tvQuantity" />
 
     <TextView
         android:id="@+id/tvAddPhoto"
@@ -223,5 +223,18 @@
         android:backgroundTint="@color/yello_green"
         android:textColor="@color/black"
         />
+
+    <ProgressBar
+        app:layout_constraintBottom_toBottomOf="@id/fab_save"
+        app:layout_constraintTop_toTopOf="@id/fab_save"
+        app:layout_constraintEnd_toStartOf="@id/fab_save"
+        android:layout_marginRight="20dp"
+        android:id="@+id/pb_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="376dp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

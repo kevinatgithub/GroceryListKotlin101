@@ -1,5 +1,6 @@
 package com.kotlin101.group2.grocerylist.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,7 @@ import com.kotlin101.group2.grocerylist.R
 import com.kotlin101.group2.grocerylist.data.api.models.Item
 import com.squareup.picasso.Picasso
 
-open class ItemListAdapter(private val items: List<Item>, private val callback: (id:Int) -> Unit) : RecyclerView.Adapter<ItemViewHolder>() {
+open class ItemListAdapter(private val context: Context, private val items: List<Item>, private val callback: (id:Int) -> Unit) : RecyclerView.Adapter<ItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_card, parent, false)
@@ -44,9 +45,11 @@ open class ItemListAdapter(private val items: List<Item>, private val callback: 
             when(item.status){
                 2->{
                     p.load(R.drawable.ic_check).into(ivStatus)
+                    ivStatus.setColorFilter(context.getColor(R.color.deep_green))
                 }
                 3->{
                     p.load(android.R.drawable.ic_menu_close_clear_cancel).into(ivStatus)
+                    ivStatus.setColorFilter(context.getColor(R.color.red))
                 }
                 1->{
                     ivStatus.visibility = View.GONE

@@ -53,7 +53,7 @@ interface GroceryApi {
     suspend fun getItem(@Path("itemId") itemId: Int, @Header("Authorization") auth: String) : Response<Item>
 
     @DELETE("items/{itemId}")
-    suspend fun deleteItem(@Path("itemId") itemId: Int, @Header("Authorization") auth: String)
+    suspend fun deleteItem(@Path("itemId") itemId: Int, @Header("Authorization") auth: String) : Response<Item>
 
     @GET("items/{itemId}/alternatives")
     suspend fun getItemAlternatives(@Path("itemId") itemId: Int, @Header("Authorization") auth: String) : Response<ArrayList<Item>>
@@ -62,8 +62,8 @@ interface GroceryApi {
     suspend fun markItemAsPrimary(@Path("itemId") itemId: Int, @Header("Authorization") auth: String)
 
     @POST("items/{itemId}/done")
-    suspend fun markItemAsDone(@Path("itemId") itemId: Int, @Header("Authorization") auth: String)
+    suspend fun markItemAsDone(@Path("itemId") itemId: Int, @Header("Authorization") auth: String) : Response<Any>
 
     @POST("items/{itemId}/notavailable")
-    suspend fun markItemAsNotAvailable(@Path("itemId") itemId: Int, @Header("Authorization") auth: String)
+    suspend fun markItemAsNotAvailable(@Path("itemId") itemId: Int, @Header("Authorization") auth: String) : Response<Any>
 }
