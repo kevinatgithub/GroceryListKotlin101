@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -105,18 +106,47 @@ class UpdateProfileActivity : AppCompatActivity() {
             if (errors > 0){
                 Toast.makeText(this@UpdateProfileActivity,"Please provide name", Toast.LENGTH_LONG).show()
             }else{
+                changePageState(isLoading = true)
                 GlobalScope.launch {
                     val result = api.updateProfile(UpdateProfileRequest(etName.text.toString(), etOldPassword.text.toString(), etNewPassword.text.toString(), profileUrl ), pref.getToken().toString())
-                    withContext(Dispatchers.Main){
-                        user.name = etName.text.toString()
-                        user.avatar = profileUrl
-                        pref.setUser(user)
-                        Toast.makeText(this@UpdateProfileActivity, "Profile has been updated!",Toast.LENGTH_LONG).show()
-                        startActivity(Intent(this@UpdateProfileActivity, MainActivity::class.java))
-                        finish()
+
+                    if (result.isSuccessful){
+                        withContext(Dispatchers.Main){
+                            user.name = etName.text.toString()
+                            user.avatar = profileUrl
+                            pref.setUser(user)
+                            Toast.makeText(this@UpdateProfileActivity, "Profile has been updated!",Toast.LENGTH_LONG).show()
+                            startActivity(Intent(this@UpdateProfileActivity, MainActivity::class.java))
+                            changePageState(isLoading = false)
+                            finish()
+                        }
+                    }else{
+                        withContext(Dispatchers.Main){
+                            Toast.makeText(this@UpdateProfileActivity, "Update profile failed!", Toast.LENGTH_SHORT).show()
+                            changePageState(isLoading = false)
+                        }
                     }
                 }
             }
+        }
+    }
+
+    private fun changePageState(isLoading:Boolean){
+        with(binding){
+            var btnState : Boolean = false
+            when(isLoading){
+                true->{
+                    pbLoading.visibility = View.VISIBLE
+                    btnState = false
+                }
+                false->{
+                    pbLoading.visibility = View.GONE
+                    btnState = true
+                }
+            }
+            btnUpdate.isEnabled = btnState
+            btnSignOut.isEnabled = btnState
+            pageHeader.ivBack.isEnabled = btnState
         }
     }
 

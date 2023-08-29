@@ -2,6 +2,7 @@ package com.kotlin101.group2.grocerylist
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -32,12 +33,31 @@ class SignUpActivity: AppCompatActivity() {
         api = GroceryApiBuilder.getInstance()
         pref = GroceryAppSharedPreference.getInstance(this)
 
+        changePageState(isLoading = false)
+
         with(binding){
             btnSignUp.setOnClickListener {
                 startValidation()
             }
             tvSignIn.setOnClickListener {
                 gotoSignIn()
+            }
+        }
+    }
+
+    private fun changePageState(isLoading:Boolean){
+        with(binding){
+            when(isLoading){
+                true->{
+                    pbLoading.visibility = View.VISIBLE
+                    btnSignUp.visibility = View.INVISIBLE
+                    tvSignIn.isEnabled = false
+                }
+                false->{
+                    pbLoading.visibility = View.GONE
+                    btnSignUp.visibility = View.VISIBLE
+                    tvSignIn.isEnabled = true
+                }
             }
         }
     }
@@ -68,6 +88,7 @@ class SignUpActivity: AppCompatActivity() {
 
     private fun processSignUp() {
         with(binding){
+            changePageState(isLoading = true)
             GlobalScope.launch {
                 var signUp = api.signUp(SignUpRequest(etEmail.text.toString(), etName.text.toString(), etPassword.text.toString()))
                 withContext(Dispatchers.Main){
@@ -81,6 +102,7 @@ class SignUpActivity: AppCompatActivity() {
                         Toast.makeText(this@SignUpActivity, errorResponse.text,Toast.LENGTH_LONG).show()
                         btnSignUp.isEnabled = true
                     }
+                    changePageState(isLoading = false)
                 }
             }
         }
@@ -101,6 +123,7 @@ class SignUpActivity: AppCompatActivity() {
 
                             withContext(Dispatchers.Main) {
                                 gotoUpdateProfile()
+                                changePageState(isLoading = false)
                             }
                         }
                     }
@@ -109,7 +132,11 @@ class SignUpActivity: AppCompatActivity() {
                     withContext(Dispatchers.Main){
                         Toast.makeText(this@SignUpActivity, errorResponse.text,Toast.LENGTH_LONG).show()
                         btnSignUp.isEnabled = true
+                        changePageState(isLoading = false)
                     }
+                }
+                withContext(Dispatchers.Main){
+                    changePageState(isLoading = false)
                 }
             }
         }
