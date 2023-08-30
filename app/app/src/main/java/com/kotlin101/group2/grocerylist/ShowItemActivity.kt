@@ -231,16 +231,16 @@ class ShowItemActivity : AppCompatActivity() {
     }
 
     private fun showAlternative(itemId: Int) {
-        if (GroceryAppHelpers.checkForInternet(this)){
-            val altItem = db.all(pref.getUser().cartId, "id == $itemId")
-            if (altItem.size > 0){
-                item = altItem[0]
-                showCurrentItem()
-                updateList()
-            }
+        val altItem = db.all(pref.getUser().cartId, "id == $itemId")
+        if (altItem.size > 0){
+            item = altItem[0]
+            showCurrentItem()
+            updateList()
+        }
+/*        if (GroceryAppHelpers.checkForInternet(this)){
         }else{
             Toast.makeText(this, "Unable to add alternative item while offline!", Toast.LENGTH_LONG).show()
-        }
+        }*/
     }
 
     private fun confirmAction(_title:String,_msg:String, positive:() -> Unit, negative:() -> Unit){

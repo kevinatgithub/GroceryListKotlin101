@@ -24,6 +24,7 @@ import com.kotlin101.group2.grocerylist.data.db.LocalItem
 import com.kotlin101.group2.grocerylist.data.db.PendingItemUpdateHandler
 import com.kotlin101.group2.grocerylist.data.sharedpreference.GroceryAppSharedPreference
 import com.kotlin101.group2.grocerylist.databinding.ActivityMainBinding
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -154,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                     val items = itemsRequest.body()
                     val transform: (Item) -> LocalItem = {GroceryDb.apiToDb(it)}
                     val primeItems = items?.filter { it.isPrimary == true }
-                    listItems = primeItems!!.map { transform(it) }
+                    listItems = primeItems!!.map { transform(it) }.sortedBy { it.name }
                     db.clearCart(pref.getUser().cartId)
                     items?.map{ transform(it) }?.forEach { db.add(it) }
                     withContext(Dispatchers.Main){
@@ -166,7 +167,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this,"Can't connect to the internet, showing offline items.",Toast.LENGTH_LONG).show()
             listItems = db.all(pref.getUser().cartId).sortedBy {
                 it.name
-            }.filter { it.isPrimary == true }
+            }.filter { it.isPrimary == true }.sortedBy { it.name }
             loadItemsToTheList()
         }
     }
