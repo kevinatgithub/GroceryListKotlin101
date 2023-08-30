@@ -173,4 +173,10 @@ public class UserController : ControllerBase
             audience: _jwtOptions.Audience
             ));
     }
+
+    [HttpGet("/healthcheck")]
+    public IActionResult HealthCheck()
+    {
+        return Ok("Ok");
+    }
 }

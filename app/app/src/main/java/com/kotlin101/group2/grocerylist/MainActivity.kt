@@ -1,14 +1,21 @@
 package com.kotlin101.group2.grocerylist
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kotlin101.group2.grocerylist.adapters.ItemListAdapter
+import com.kotlin101.group2.grocerylist.adapters.MyCustomActionBarToggle
 import com.kotlin101.group2.grocerylist.data.api.GroceryApi
 import com.kotlin101.group2.grocerylist.data.api.GroceryApiBuilder
 import com.kotlin101.group2.grocerylist.data.api.models.Item
@@ -28,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var api: GroceryApi
     private lateinit var pref: GroceryAppSharedPreference
     private lateinit var db: GroceryDb
+    private lateinit var actionBarDrawerToggle: MyCustomActionBarToggle
     private var listItems: List<LocalItem> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +44,12 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        /*setSupportActionBar(binding.myToolbar)
+        actionBarDrawerToggle = MyCustomActionBarToggle(this, binding.myDrawerLayout,R.string.open,R.string.close)
+        binding.myDrawerLayout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)*/
 
         api = GroceryApiBuilder.getInstance()
         pref = GroceryAppSharedPreference.getInstance(this)
@@ -53,8 +67,7 @@ class MainActivity : AppCompatActivity() {
             layoutHeader.tvTitle.text = "Item List"
             layoutHeader.ivBack.setImageDrawable(getDrawable(R.drawable.ic_menu))
             layoutHeader.ivBack.setOnClickListener {
-                // TODO: Change to open drawer
-                startActivity(Intent(this@MainActivity, ContactsActivity::class.java))
+                startActivity(Intent(this@MainActivity, MenuActivity::class.java))
                 finish()
             }
 
@@ -95,6 +108,12 @@ class MainActivity : AppCompatActivity() {
 
         processPending()
         loadItemsList()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            true
+        } else super.onOptionsItemSelected(item)
     }
 
     private fun processPending() {

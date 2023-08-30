@@ -35,4 +35,6 @@
     <string name="new_password_blank_for_no_changes">NEW PASSWORD (Blank if no changes)</string>
     <string name="old_password">OLD PASSWORD (Blank if no changes)</string>
     <string name="add_contact">Add Contact</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>

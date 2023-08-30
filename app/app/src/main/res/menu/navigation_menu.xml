@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText">
+
+    <item
+        android:id="@+id/nav_contacts"
+        android:title="Contacts"
+        android:icon="@drawable/ic_menu"/>
+
+    <item
+        android:id="@+id/nav_clear"
+        android:title="Clear List"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"/>
+
+    <item
+        android:id="@+id/nav_signout"
+        android:title="Sign Out"
+        android:icon="@android:drawable/ic_secure"/>
+
+</menu>
