@@ -30,7 +30,7 @@ class SelectAvatarActivity: AppCompatActivity() {
             }
             rvAvatars.layoutManager = GridLayoutManager(this@SelectAvatarActivity,2)
             GlobalScope.launch {
-                val images = GroceryAppHelpers.getRelatedImagesUrlFromWeb("profile cartoon avatar", 1000)
+                val images = GroceryAppHelpers.getRelatedImagesUrlFromWeb("profile cartoon avatar", 200)
 
                 withContext(Dispatchers.Main){
                     val adapter = ImageSearchAdapter(images,::showAvatar)
